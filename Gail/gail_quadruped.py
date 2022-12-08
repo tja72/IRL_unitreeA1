@@ -61,7 +61,7 @@ def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
 
     # TODO adapt/need?: remove hip rotations ---------------------------------------------------------------------------
     #assert disc_only_state, ValueError("This configuration file does not support actions for the discriminator") ---changed
-    discrim_act_mask = []  if disc_only_state else np.arange(mdp_info.action_space.shape[0])
+    discrim_act_mask = [] if disc_only_state else np.arange(mdp_info.action_space.shape[0])
     discrim_input_shape = (2 * (len(discrim_obs_mask)+len(discrim_act_mask)),) if use_next_states else (len(discrim_obs_mask)+len(discrim_act_mask),)
     discrim_standardizer = Standardizer()
     discriminator_params = dict(optimizer={'class':  optim.Adam,
@@ -133,12 +133,6 @@ def experiment(n_epochs: int = 500,
     traj_data_freq = 500    # hz, added here as a reminder
     desired_contr_freq = 500     # hz
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
-
-    # TODO: set a reward for logging -----------------------------------------------------------------------------------
-    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[35] - 1.25))  # x-velocity as reward
-
-
-    #TODO: left trajectory out, correct?
 
 
     # create the environment
