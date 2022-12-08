@@ -18,9 +18,9 @@ if __name__ == '__main__':
                         #joblib_n_jobs=JOBLIB_PARALLEL_JOBS, n_cores=JOBLIB_PARALLEL_JOBS * 1, memory=JOBLIB_PARALLEL_JOBS * 1000,
                         n_cores=6,
                         memory_per_core=500, #not in other file
-                        days=0,
+                        days=4,
                         hours=0,
-                        minutes=1,
+                        minutes=0,
                         seconds=0,
                         use_timestamp=True,
                         ) #partition, conda_env, use_underscore_argparse
