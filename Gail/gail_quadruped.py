@@ -1,5 +1,6 @@
 import os
 from copy import deepcopy
+import sys
 
 from time import perf_counter
 from contextlib import contextmanager
@@ -20,11 +21,13 @@ from mushroom_rl_imitation.imitation import GAIL_TRPO
 from mushroom_rl_imitation.utils import FullyConnectedNetwork, DiscriminatorNetwork, NormcInitializer,\
     Standardizer, GailDiscriminatorLoss
 from mushroom_rl_imitation.utils import BestAgentSaver
+from mushroom_rl_imitation.utils import behavioral_cloning, prepare_expert_data
+
 
 from experiment_launcher import run_experiment
 
 
-def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_state=True,
+def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_state=True,
                        train_D_n_th_epoch=3, lrc=1e-3, lrD=0.0003, sw=None, policy_entr_coef=0.0,
                        use_noisy_targets=False, last_policy_activation="identity", use_next_states=True):
 
@@ -57,9 +60,9 @@ def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
                          use_cuda=use_cuda)
 
     # TODO adapt/need?: remove hip rotations ---------------------------------------------------------------------------
-    assert disc_only_state, ValueError("This configuration file does not support actions for the discriminator")
-    discrim_act_mask = []  # if disc_only_state else np.arange(mdp_info.action_space.shape[0])
-    discrim_input_shape = (2 * len(discrim_obs_mask),) if use_next_states else (len(discrim_obs_mask),)
+    #assert disc_only_state, ValueError("This configuration file does not support actions for the discriminator") ---changed
+    discrim_act_mask = []  if disc_only_state else np.arange(mdp_info.action_space.shape[0])
+    discrim_input_shape = (2 * (len(discrim_obs_mask)+len(discrim_act_mask)),) if use_next_states else (len(discrim_obs_mask)+len(discrim_act_mask),)
     discrim_standardizer = Standardizer()
     discriminator_params = dict(optimizer={'class':  optim.Adam,
                                            'params': {'lr':           lrD,
@@ -127,33 +130,35 @@ def experiment(n_epochs: int = 500,
 
     # define env and data frequencies
     env_freq = 1000  # hz, added here as a reminder
-    traj_data_freq = 1000    # hz, added here as a reminder
-    desired_contr_freq = 1000     # hz
+    traj_data_freq = 500    # hz, added here as a reminder
+    desired_contr_freq = 500     # hz
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
 
     # TODO: set a reward for logging -----------------------------------------------------------------------------------
     reward_callback = lambda state, action, next_state: np.exp(- np.square(state[35] - 1.25))  # x-velocity as reward
 
-    # prepare trajectory params
-    traj_params = dict(traj_path=expert_data_path,
-                       traj_dt=(1/traj_data_freq),
-                       control_dt=(1/desired_contr_freq))
+
+    #TODO: left trajectory out, correct?
+
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    use_action_clipping=False, traj_params=traj_params)
+                    use_action_clipping=False)
+
+
+    # TODO: Need preprocessors=[normalizer]? ---------------------------------------------------------------------------
 
     # create a dataset
-    expert_data = mdp.create_dataset()#ignore_keys=["q_pelvis_tx", "q_pelvis_tz"])
+    expert_data = prepare_expert_data(data_path=expert_data_path)#ignore_keys=["q_pelvis_tx", "q_pelvis_tz"])
 
-    discrim_obs_mask = np.arange(36)
+    discrim_obs_mask = np.arange(expert_data["states"].shape[1]) #TODO: changed ---------- smarter in other way? ------------------------------------mdp.info.observation_space.shape[0]---
 
     # logging stuff
     tb_writer = SummaryWriter(log_dir=results_dir)
     agent_saver = BestAgentSaver(save_path=results_dir, n_epochs_save=n_epochs_save)
 
     # create agent and core
-    agent = _create_vail_agent(mdp=mdp, expert_data=expert_data, use_cuda=use_cuda, disc_only_state=discr_only_state,
+    agent = _create_gail_agent(mdp=mdp, expert_data=expert_data, use_cuda=use_cuda, disc_only_state=discr_only_state,
                                train_D_n_th_epoch=train_D_n_th_epoch, lrc=lrc,
                                lrD=lrD, sw=tb_writer, policy_entr_coef=policy_entr_coef,
                                use_noisy_targets=use_noisy_targets, use_next_states=use_next_states,
@@ -207,4 +212,33 @@ if __name__ == "__main__":
     run_experiment(experiment)
 
 
-# TODO: adapt from Vail ------------------------------------------------------------------------------------------------
+    """
+    Questions:
+    
+    
+    
+
+    continue gail and not RL#
+    cluster
+    
+    trajectory stepping in one position -> bad for data?
+    
+    error in dataset: compute_episodes_length if lengths=[]
+    ignore x,y
+    imports smarter than now
+    what else in mushroom_irl state than observations
+    -> whats in state
+    
+    Did:
+    tuned values in xml
+    extend gail implementation to use actions
+    -> error
+    method to replay/restore learned agent
+
+
+
+
+    
+    """
+
+
