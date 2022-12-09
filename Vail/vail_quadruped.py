@@ -149,10 +149,13 @@ def experiment(n_epochs: int = 500,
                        traj_dt=(1 / traj_data_freq),
                        control_dt=(1 / desired_contr_freq))
 
+    # set a reward for logging
+    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.5))  # x-velocity as reward
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    use_action_clipping=False, traj_params=traj_params)
+                    use_action_clipping=False, traj_params=traj_params,
+                    goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
 
 

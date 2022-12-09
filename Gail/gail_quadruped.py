@@ -135,6 +135,10 @@ def experiment(n_epochs: int = 500,
     desired_contr_freq = 500     # hz
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
 
+    # set a reward for logging
+    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.5))  # x-velocity as reward
+
+
     # prepare trajectory params
     traj_params = dict(traj_path=init_data_path,
                        traj_dt=(1 / traj_data_freq),
@@ -142,16 +146,16 @@ def experiment(n_epochs: int = 500,
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    use_action_clipping=False, traj_params=traj_params)
+                    use_action_clipping=False, traj_params=traj_params,
+                    goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
 
-    # TODO: Need preprocessors=[normalizer]? ---------------------------------------------------------------------------
 
+    # TODO: add interpolation, create own method without reward; add reward to traj/mdp
     # create a dataset
     expert_data = prepare_expert_data(data_path=expert_data_path)#ignore_keys=["q_pelvis_tx", "q_pelvis_tz"])
 
-    discrim_obs_mask = np.arange(expert_data["states"].shape[1]) #TODO: changed ---------- smarter in other way? ------------------------------------mdp.info.observation_space.shape[0]---
-
+    discrim_obs_mask = np.arange(expert_data["states"].shape[1])
     # logging stuff
     tb_writer = SummaryWriter(log_dir=results_dir)
     agent_saver = BestAgentSaver(save_path=results_dir, n_epochs_save=n_epochs_save)
@@ -164,7 +168,7 @@ def experiment(n_epochs: int = 500,
                                last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
 
     core = Core(agent, mdp)
-    
+
     # gail train loop
     for epoch in range(n_epochs):
         with catchtime() as t:
@@ -236,8 +240,20 @@ if __name__ == "__main__":
 
 
 
+------------------------------------------------------------------------------------------
 
+    why do I need absorbing/reward in the dataset
+    difference between using traj_param in mdp and using only prepare_expert data (in respect to absorbing/reward...)
+    Where Gail uses absorbing/reward
+    do I need a normalizer?
+    states and actions make sense to interpolate, absorbing and rewards don't
     
+    continue fine tuning xml
+    
+    
+    
+    
+    Info traj:params used in core.learn draws random init point -> where it uses reward
     """
 
 
