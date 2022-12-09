@@ -164,8 +164,7 @@ def experiment(n_epochs: int = 500,
                                last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
 
     core = Core(agent, mdp)
-    core.evaluate(n_episodes=10, render=True)
-
+    
     # gail train loop
     for epoch in range(n_epochs):
         with catchtime() as t:
