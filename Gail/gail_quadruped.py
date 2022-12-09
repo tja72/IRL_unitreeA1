@@ -104,6 +104,7 @@ def experiment(n_epochs: int = 500,
                n_eval_episodes: int = 50,
                n_epochs_save: int = 500,
                expert_data_path: str = None,
+               init_data_path: str = None,
                horizon: int = 1000,
                gamma: float = 0.99,
                goal_data_path: str = None,
@@ -134,10 +135,14 @@ def experiment(n_epochs: int = 500,
     desired_contr_freq = 500     # hz
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
 
+    # prepare trajectory params
+    traj_params = dict(traj_path=init_data_path,
+                       traj_dt=(1 / traj_data_freq),
+                       control_dt=(1 / desired_contr_freq))
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    use_action_clipping=False)
+                    use_action_clipping=False, traj_params=traj_params)
 
 
     # TODO: Need preprocessors=[normalizer]? ---------------------------------------------------------------------------
@@ -159,6 +164,7 @@ def experiment(n_epochs: int = 500,
                                last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
 
     core = Core(agent, mdp)
+    core.evaluate(n_episodes=10, render=True)
 
     # gail train loop
     for epoch in range(n_epochs):

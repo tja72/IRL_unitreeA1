@@ -31,6 +31,7 @@ if __name__ == '__main__':
                           n_eval_episodes=10,
                           n_steps_per_fit=1000,
                           expert_data_path="../data/dataset_unitreeA1_IRL.npz",
+                          init_data_path="../data/dataset_only_states_unitreeA1_IRL.npz",
                           use_next_states=False,
                           use_cuda=USE_CUDA,
                           discr_only_state=False)
