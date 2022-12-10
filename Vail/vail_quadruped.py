@@ -150,7 +150,7 @@ def experiment(n_epochs: int = 500,
                        control_dt=(1 / desired_contr_freq))
 
     # set a reward for logging
-    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.5))  # x-velocity as reward
+    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
@@ -160,7 +160,7 @@ def experiment(n_epochs: int = 500,
 
 
     # create a dataset
-    expert_data = prepare_expert_data(data_path=expert_data_path)#ignore_keys=["q_pelvis_tx", "q_pelvis_tz"])
+    expert_data = mdp.create_dataset(data_path=expert_data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"])
 
     discrim_obs_mask = np.arange(expert_data["states"].shape[1])
 
