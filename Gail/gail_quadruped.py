@@ -98,12 +98,14 @@ def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
     return agent
 
 
+
 def experiment(n_epochs: int = 500,
                n_steps_per_epoch: int = 10000,
                n_steps_per_fit: int = 1024,
                n_eval_episodes: int = 50,
                n_epochs_save: int = 500,
                expert_data_path: str = None,
+               init_data_path: str = None,
                horizon: int = 1000,
                gamma: float = 0.99,
                goal_data_path: str = None,
@@ -135,18 +137,30 @@ def experiment(n_epochs: int = 500,
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
 
 
+    # set a reward for logging
+    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6 ))  # x-velocity as reward
+
+
+    # prepare trajectory params
+    traj_params = dict(traj_path=init_data_path,
+                       traj_dt=(1 / traj_data_freq),
+                       control_dt=(1 / desired_contr_freq))
+
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    use_action_clipping=False)
+                    use_action_clipping=False, traj_params=traj_params,
+                    goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
 
-    # TODO: Need preprocessors=[normalizer]? ---------------------------------------------------------------------------
 
+    # TODO: add interpolation, create own method without reward
     # create a dataset
-    expert_data = prepare_expert_data(data_path=expert_data_path)#ignore_keys=["q_pelvis_tx", "q_pelvis_tz"])
+    expert_data = mdp.create_dataset(data_path=expert_data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"])
 
-    discrim_obs_mask = np.arange(expert_data["states"].shape[1]) #TODO: changed ---------- smarter in other way? ------------------------------------mdp.info.observation_space.shape[0]---
 
+
+
+    discrim_obs_mask = np.arange(expert_data["states"].shape[1])
     # logging stuff
     tb_writer = SummaryWriter(log_dir=results_dir)
     agent_saver = BestAgentSaver(save_path=results_dir, n_epochs_save=n_epochs_save)
@@ -231,8 +245,20 @@ if __name__ == "__main__":
 
 
 
+------------------------------------------------------------------------------------------
 
+    why do I need absorbing/reward in the dataset
+    difference between using traj_param in mdp and using only prepare_expert data (in respect to absorbing/reward...)
+    Where Gail uses absorbing/reward
+    do I need a normalizer?
+    states and actions make sense to interpolate, absorbing and rewards don't
     
+    continue fine tuning xml
+    
+    
+    
+    
+    Info traj:params used in core.learn draws random init point -> where it uses reward
     """
 
 

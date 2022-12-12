@@ -110,6 +110,7 @@ def experiment(n_epochs: int = 500,
                n_eval_episodes: int = 50,
                n_epochs_save: int = 500,
                expert_data_path: str = None,
+               init_data_path: str = None,
                horizon: int = 1000,
                gamma: float = 0.99,
                goal_data_path: str = None,
@@ -143,12 +144,23 @@ def experiment(n_epochs: int = 500,
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
 
 
+    # prepare trajectory params
+    traj_params = dict(traj_path=init_data_path,
+                       traj_dt=(1 / traj_data_freq),
+                       control_dt=(1 / desired_contr_freq))
+
+    # set a reward for logging
+    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
+
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    use_action_clipping=False)
+                    use_action_clipping=False, traj_params=traj_params,
+                    goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
+
+
 
     # create a dataset
-    expert_data = prepare_expert_data(data_path=expert_data_path)#ignore_keys=["q_pelvis_tx", "q_pelvis_tz"])
+    expert_data = mdp.create_dataset(data_path=expert_data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"])
 
     discrim_obs_mask = np.arange(expert_data["states"].shape[1])
 
@@ -162,7 +174,9 @@ def experiment(n_epochs: int = 500,
                                lrD=lrD, sw=tb_writer, policy_entr_coef=policy_entr_coef,
                                use_noisy_targets=use_noisy_targets, use_next_states=use_next_states,
                                last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
+    core = Core(mdp=mdp, agent=agent)
 
+    core.evaluate(n_episodes=10, render=True)
     core = Core(agent, mdp)
 
     # gail train loop
