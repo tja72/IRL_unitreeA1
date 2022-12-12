@@ -43,7 +43,7 @@ if __name__ == '__main__':
     lpa = ["identity"]
     use_next_states = [1]
     horizons = [1000]
-    gammas = [0.9]
+    gammas = [0.99]
 
     for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma in product(lrs, d_delays, plcy_ent_coefs,
                                                                       use_noisy_targets, lpa, horizons,
