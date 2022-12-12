@@ -140,7 +140,7 @@ def experiment(n_epochs: int = 500,
     # define env and data frequencies
     env_freq = 1000  # hz, added here as a reminder
     traj_data_freq = 500    # hz, added here as a reminder
-    desired_contr_freq = 500     # hz
+    desired_contr_freq = 100     # hz
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
 
 
