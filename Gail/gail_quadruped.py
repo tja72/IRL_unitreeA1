@@ -148,7 +148,7 @@ def experiment(n_epochs: int = 500,
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    use_action_clipping=False, traj_params=traj_params,
+                    traj_params=traj_params, init_step_no=0,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
 
