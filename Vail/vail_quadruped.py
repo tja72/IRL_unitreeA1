@@ -109,8 +109,8 @@ def experiment(n_epochs: int = 500,
                n_steps_per_fit: int = 1024,
                n_eval_episodes: int = 50,
                n_epochs_save: int = 500,
-               expert_data_path: str = None,
-               init_data_path: str = None,
+               action_data_path: str = None,
+               states_data_path: str = None,
                horizon: int = 1000,
                gamma: float = 0.99,
                goal_data_path: str = None,
@@ -145,7 +145,7 @@ def experiment(n_epochs: int = 500,
 
 
     # prepare trajectory params
-    traj_params = dict(traj_path=init_data_path,
+    traj_params = dict(traj_path=states_data_path,
                        traj_dt=(1 / traj_data_freq),
                        control_dt=(1 / desired_contr_freq))
 
@@ -154,13 +154,13 @@ def experiment(n_epochs: int = 500,
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    traj_params=traj_params, init_step_no=0,
+                    traj_params=traj_params, random_start=True,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
 
 
     # create a dataset
-    expert_data = mdp.create_dataset(data_path=expert_data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"])
+    expert_data = mdp.create_dataset(data_path=action_data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
 
     discrim_obs_mask = np.arange(expert_data["states"].shape[1])
 
@@ -176,8 +176,6 @@ def experiment(n_epochs: int = 500,
                                last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
     core = Core(mdp=mdp, agent=agent)
 
-    core.evaluate(n_episodes=10, render=True)
-    core = Core(agent, mdp)
 
     # gail train loop
     for epoch in range(n_epochs):
