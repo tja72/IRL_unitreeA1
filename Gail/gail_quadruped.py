@@ -26,6 +26,8 @@ from mushroom_rl_imitation.utils import behavioral_cloning, prepare_expert_data
 
 from experiment_launcher import run_experiment
 
+from collections import defaultdict
+
 
 def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_state=True,
                        train_D_n_th_epoch=3, lrc=1e-3, lrD=0.0003, sw=None, policy_entr_coef=0.0,
@@ -140,20 +142,82 @@ def experiment(n_epochs: int = 500,
     reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
 
     # prepare trajectory params
-    traj_params = dict(traj_path=states_data_path,
-                       traj_dt=(1 / traj_data_freq),
-                       control_dt=(1 / desired_contr_freq))
+    if(type(states_data_path)==list) : # concatenate datasets and store for trajectory
+        temp_states_dataset=[[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        for path in states_data_path:
+            trajectory_files = np.load(path, allow_pickle=True)
+            trajectory_files = {k: d for k, d in trajectory_files.items()}
+            trajectory = np.array([trajectory_files[key] for key in trajectory_files.keys()])
+            assert len(temp_states_dataset) == len(trajectory)
+            for i in np.arange(len(temp_states_dataset)):
+                temp_states_dataset[i]=temp_states_dataset[i] + list(trajectory[i])
+        np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states.npz'),
+                 q_trunk_tx=np.array(temp_states_dataset[0]),
+                 q_trunk_ty=np.array(temp_states_dataset[1]),
+                 q_trunk_tz=np.array(temp_states_dataset[2]),
+                 q_trunk_tilt=np.array(temp_states_dataset[3]),
+                 q_trunk_list=np.array(temp_states_dataset[4]),
+                 q_trunk_rotation=np.array(temp_states_dataset[5]),
+                 q_FR_hip_joint=np.array(temp_states_dataset[6]),
+                 q_FR_thigh_joint=np.array(temp_states_dataset[7]),
+                 q_FR_calf_joint=np.array(temp_states_dataset[8]),
+                 q_FL_hip_joint=np.array(temp_states_dataset[9]),
+                 q_FL_thigh_joint=np.array(temp_states_dataset[10]),
+                 q_FL_calf_joint=np.array(temp_states_dataset[11]),
+                 q_RR_hip_joint=np.array(temp_states_dataset[12]),
+                 q_RR_thigh_joint=np.array(temp_states_dataset[13]),
+                 q_RR_calf_joint=np.array(temp_states_dataset[14]),
+                 q_RL_hip_joint=np.array(temp_states_dataset[15]),
+                 q_RL_thigh_joint=np.array(temp_states_dataset[16]),
+                 q_RL_calf_joint=np.array(temp_states_dataset[17]),
+                 dq_trunk_tx=np.array(temp_states_dataset[18]),
+                 dq_trunk_tz=np.array(temp_states_dataset[19]),
+                 dq_trunk_ty=np.array(temp_states_dataset[20]),
+                 dq_trunk_tilt=np.array(temp_states_dataset[21]),
+                 dq_trunk_list=np.array(temp_states_dataset[22]),
+                 dq_trunk_rotation=np.array(temp_states_dataset[23]),
+                 dq_FR_hip_joint=np.array(temp_states_dataset[24]),
+                 dq_FR_thigh_joint=np.array(temp_states_dataset[25]),
+                 dq_FR_calf_joint=np.array(temp_states_dataset[26]),
+                 dq_FL_hip_joint=np.array(temp_states_dataset[27]),
+                 dq_FL_thigh_joint=np.array(temp_states_dataset[28]),
+                 dq_FL_calf_joint=np.array(temp_states_dataset[29]),
+                 dq_RR_hip_joint=np.array(temp_states_dataset[30]),
+                 dq_RR_thigh_joint=np.array(temp_states_dataset[31]),
+                 dq_RR_calf_joint=np.array(temp_states_dataset[32]),
+                 dq_RL_hip_joint=np.array(temp_states_dataset[33]),
+                 dq_RL_thigh_joint=np.array(temp_states_dataset[34]),
+                 dq_RL_calf_joint=np.array(temp_states_dataset[35]))
+        traj_params = dict(traj_path='./dataset_temp_concatenated_optimal_states.npz',
+                           traj_dt=(1 / traj_data_freq),
+                           control_dt=(1 / desired_contr_freq))
+    else:
+        traj_params = dict(traj_path=states_data_path,
+                           traj_dt=(1 / traj_data_freq),
+                           control_dt=(1 / desired_contr_freq))
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
                     traj_params=traj_params, random_start=True,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
-
+    if discr_only_state:
+        data_path = states_data_path
+    else:
+        data_path = action_data_path
 
     # create a dataset
-    expert_data = mdp.create_dataset(data_path=action_data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
-
+    if(type(data_path) == list):
+        temp_expert_data = defaultdict(lambda: [])
+        for path in data_path:
+            temp_data = mdp.create_dataset(data_path=path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
+            for key in temp_data:
+                temp_expert_data[key]=temp_expert_data[key] + list(temp_data[key])
+        expert_data = dict()
+        for key in temp_expert_data:
+            expert_data[key] = np.array(temp_expert_data[key])
+    else:
+        expert_data = mdp.create_dataset(data_path=data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
 
 
 
@@ -176,9 +240,9 @@ def experiment(n_epochs: int = 500,
         with catchtime() as t:
             core.learn(n_steps=n_steps_per_epoch, n_steps_per_fit=n_steps_per_fit, quiet=True, render=False)
             dataset = core.evaluate(n_episodes=n_eval_episodes)
-            J_mean = np.mean(compute_J(dataset))
-            tb_writer.add_scalar("Eval_J", J_mean, epoch)
-            agent_saver.save(core.agent, J_mean)
+            R_mean = np.mean(compute_J(dataset))
+            tb_writer.add_scalar("Eval_R", R_mean, epoch)
+            agent_saver.save(core.agent, R_mean)
             print('Epoch %d | Time %fs ' % (epoch + 1, float(t())))
 
             # evaluate with deterministic policy
@@ -202,7 +266,7 @@ def experiment(n_epochs: int = 500,
             tb_writer.add_scalar("Eval_R-stochastic", R_mean, epoch)
             tb_writer.add_scalar("Eval_J-stochastic", J_mean, epoch)
             tb_writer.add_scalar("Eval_L-stochastic", L, epoch)
-            agent_saver.save(core.agent, R_mean)
+            #agent_saver.save(core.agent, R_mean)
 
     agent_saver.save_curr_best_agent()
     print("Finished.")
