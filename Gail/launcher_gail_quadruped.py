@@ -29,8 +29,6 @@ if __name__ == '__main__':
                           n_epochs_save=50,
                           n_eval_episodes=10,
                           n_steps_per_fit=1000,
-                          action_data_path=["../data/dataset_unitreeA1_IRL_0.npz", "../data/dataset_unitreeA1_IRL_1.npz", "../data/dataset_unitreeA1_IRL_2.npz", "../data/dataset_unitreeA1_IRL_3.npz", "../data/dataset_unitreeA1_IRL_4.npz"],
-                          states_data_path=["../data/dataset_only_states_unitreeA1_IRL_0.npz", "../data/dataset_only_states_unitreeA1_IRL_1.npz", "../data/dataset_only_states_unitreeA1_IRL_2.npz", "../data/dataset_only_states_unitreeA1_IRL_3.npz", "../data/dataset_only_states_unitreeA1_IRL_4.npz"],
                           use_next_states=False,
                           use_cuda=USE_CUDA,
                           discr_only_state=False) 

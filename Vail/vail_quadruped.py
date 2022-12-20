@@ -19,7 +19,7 @@ from mushroom_rl.environments.mujoco_envs.humanoids import Trajectory
 
 from mushroom_rl_imitation.imitation import VAIL_TRPO
 from mushroom_rl_imitation.utils import FullyConnectedNetwork, NormcInitializer, Standardizer, VariationalNet, VDBLoss
-from mushroom_rl_imitation.utils import BestAgentSaver, prepare_expert_data
+from mushroom_rl_imitation.utils import BestAgentSaver
 
 from experiment_launcher import run_experiment
 from collections import defaultdict
@@ -111,8 +111,6 @@ def experiment(n_epochs: int = 500,
                n_steps_per_fit: int = 1024,
                n_eval_episodes: int = 50,
                n_epochs_save: int = 500,
-               action_data_path: str = None,
-               states_data_path: list = None,
                horizon: int = 1000,
                gamma: float = 0.99,
                goal_data_path: str = None,
@@ -129,6 +127,21 @@ def experiment(n_epochs: int = 500,
                use_cuda: bool = False,
                results_dir: str = './logs',
                seed: int = 0):
+
+    if discr_only_state:
+        action_data_path = None
+        states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_optimal_0.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_1.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_2.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
+    else:
+        action_data_path = ["../data/dataset_unitreeA1_IRL_0.npz",
+                            "../data/dataset_unitreeA1_IRL_1.npz",
+                            "../data/dataset_unitreeA1_IRL_2.npz",
+                            "../data/dataset_unitreeA1_IRL_3.npz",
+                            "../data/dataset_unitreeA1_IRL_4.npz"]
+        states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_0.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_1.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_2.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_3.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_4.npz"]
 
 
     np.random.seed(seed)

@@ -29,7 +29,6 @@ if __name__ == '__main__':
                           n_epochs_save=50,
                           n_eval_episodes=10,
                           n_steps_per_fit=1000,
-                          states_data_path=["../data/dataset_only_states_unitreeA1_IRL_optimal_0.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_1.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_2.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz", "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"],
                           use_next_states=True,
                           discr_only_state=True,
                           use_cuda=USE_CUDA)

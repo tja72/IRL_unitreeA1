@@ -107,8 +107,6 @@ def experiment(n_epochs: int = 500,
                n_steps_per_fit: int = 1024,
                n_eval_episodes: int = 50,
                n_epochs_save: int = 500,
-               action_data_path: str = None,
-               states_data_path: str = None,
                horizon: int = 1000,
                gamma: float = 0.99,
                goal_data_path: str = None,
@@ -124,6 +122,22 @@ def experiment(n_epochs: int = 500,
                results_dir: str = './logs',
                seed: int = 0):
 
+    if(discr_only_state):
+        action_data_path = None
+        states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_optimal_0.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_optimal_1.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_optimal_2.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
+    else:
+        action_data_path = ["../data/dataset_unitreeA1_IRL_0.npz", "../data/dataset_unitreeA1_IRL_1.npz",
+                            "../data/dataset_unitreeA1_IRL_2.npz", "../data/dataset_unitreeA1_IRL_3.npz",
+                            "../data/dataset_unitreeA1_IRL_4.npz"]
+        states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_0.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_1.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_2.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_3.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_4.npz"]
 
     np.random.seed(seed)
     torch.random.manual_seed(seed)
