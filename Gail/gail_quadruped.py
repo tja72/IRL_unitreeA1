@@ -16,6 +16,7 @@ from mushroom_rl.environments.mujoco_envs.quadrupeds import UnitreeA1
 from mushroom_rl.policy import GaussianTorchPolicy
 from mushroom_rl.utils.dataset import compute_J, compute_episodes_length
 from mushroom_rl.core.logger.logger import Logger
+from mushroom_rl.utils.callbacks import PlotDataset
 
 from mushroom_rl_imitation.imitation import GAIL_TRPO
 from mushroom_rl_imitation.utils import FullyConnectedNetwork, DiscriminatorNetwork, NormcInitializer,\
@@ -233,7 +234,8 @@ def experiment(n_epochs: int = 500,
                                use_noisy_targets=use_noisy_targets, use_next_states=use_next_states,
                                last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
 
-    core = Core(agent, mdp)
+    #plot_data_callbacks = PlotDataset(mdp.info)
+    core = Core(agent, mdp)#, callback_step=plot_data_callbacks)
 
     # gail train loop
     for epoch in range(n_epochs):
