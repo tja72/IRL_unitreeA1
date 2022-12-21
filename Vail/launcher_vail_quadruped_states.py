@@ -49,7 +49,7 @@ if __name__ == '__main__':
                                                                       use_noisy_targets, lpa, horizons,
                                                                       gammas, info_constraints):
         lrc, lrD = lr
-        launcher.add_experiment(train_D_n_th_epoch__=d, info_constraint__=info_constraints, #__ can change/will not overwrite
+        launcher.add_experiment(train_D_n_th_epoch__=d, info_constraint__=info_constraint, #__ can change/will not overwrite
                                 policy_entr_coef=p_ent_coef, last_policy_activation=last_pa, lrc=lrc, lrD__=lrD,
                                 use_noisy_targets__=use_nt, horizon__=horizon, gamma__=gamma, **default_params)
 
