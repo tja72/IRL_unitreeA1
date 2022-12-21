@@ -264,9 +264,9 @@ def experiment(n_epochs: int = 500,
         with catchtime() as t:
             core.learn(n_steps=n_steps_per_epoch, n_steps_per_fit=n_steps_per_fit, quiet=True, render=False)
             dataset = core.evaluate(n_episodes=n_eval_episodes)
-            J_mean = np.mean(compute_J(dataset))
-            tb_writer.add_scalar("Eval_J", J_mean, epoch)
-            agent_saver.save(core.agent, J_mean)
+            R_mean = np.mean(compute_J(dataset))
+            tb_writer.add_scalar("Eval_R", R_mean, epoch)
+            agent_saver.save(core.agent, R_mean)
             print('Epoch %d | Time %fs ' % (epoch + 1, float(t())))
 
             # evaluate with deterministic policy
@@ -290,7 +290,7 @@ def experiment(n_epochs: int = 500,
             tb_writer.add_scalar("Eval_R-stochastic", R_mean, epoch)
             tb_writer.add_scalar("Eval_J-stochastic", J_mean, epoch)
             tb_writer.add_scalar("Eval_L-stochastic", L, epoch)
-            agent_saver.save(core.agent, R_mean)
+            #agent_saver.save(core.agent, R_mean)
 
     agent_saver.save_curr_best_agent()
     print("Finished.")
