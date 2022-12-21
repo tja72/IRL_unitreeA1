@@ -32,7 +32,8 @@ if __name__ == '__main__':
                           n_steps_per_fit=1000,
                           use_next_states=False,
                           use_cuda=USE_CUDA,
-                          discr_only_state=False)
+                          discr_only_state=False,
+                          use_torque_ctrl=False)
 
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]

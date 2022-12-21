@@ -18,10 +18,10 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    agent = Serializable.load('/home/tim/Documents/quadruped_gail_unitreeA1_2022-12-15_02-27-07/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_978_J_863.707600.msh')
+    agent = Serializable.load('/home/tim/Documents/quadruped_vail_unitreeA1_only_states_2022-12-20_22-27-17/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.9/1/agent_epoch_85_J_992.316935.msh')
 
-    np.random.seed(2)
-    torch.random.manual_seed(2)
+    np.random.seed(0)
+    torch.random.manual_seed(0)
     # action demo - need action clipping to be off
 
     gamma = 0.99
@@ -53,7 +53,9 @@ if __name__ == '__main__':
     plot_data_callbacks = PlotDataset(env.info)
     core = Core(mdp=env, agent=agent, callback_step=plot_data_callbacks)
     #core.agent.policy.deterministic = False
-    dataset = core.evaluate(n_episodes=50, render=True)
+    dataset, env_info = core.evaluate(n_episodes=100, render=True, get_env_info=True)
+    for sample in dataset:
+        print("Has fallen: ", sample[4]) #sample = (state, action, reward, next_state, absorbing, last)
     R_mean = np.mean(compute_J(dataset))
     J_mean = np.mean(compute_J(dataset, gamma=gamma))
     L = np.mean(compute_episodes_length(dataset))

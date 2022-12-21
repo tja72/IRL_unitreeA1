@@ -126,7 +126,8 @@ def experiment(n_epochs: int = 500,
                use_next_states: bool = False,
                use_cuda: bool = False,
                results_dir: str = './logs',
-               seed: int = 0):
+               seed: int = 0,
+               use_torque_ctrl: bool = False):
 
     if discr_only_state:
         action_data_path = None
@@ -220,7 +221,7 @@ def experiment(n_epochs: int = 500,
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    traj_params=traj_params, random_start=True,
+                    traj_params=traj_params, random_start=True, use_torque_ctrl=use_torque_ctrl,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
     if discr_only_state:
