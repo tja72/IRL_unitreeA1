@@ -41,13 +41,14 @@ if __name__ == '__main__':
     lpa = ["identity"]
     use_next_states = [1]
     horizons = [1000]
-    gammas = [0.9]
+    gammas = [0.99]
+    info_constraints = [0.1, 0.5, 0.01]
 
-    for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma in product(lrs, d_delays, plcy_ent_coefs,
+    for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma, info_constraint in product(lrs, d_delays, plcy_ent_coefs,
                                                                       use_noisy_targets, lpa, horizons,
-                                                                      gammas):
+                                                                      gammas, info_constraints):
         lrc, lrD = lr
-        launcher.add_experiment(train_D_n_th_epoch__=d,
+        launcher.add_experiment(train_D_n_th_epoch__=d, info_constraint__=info_constraints, #__ can change/will not overwrite
                                 policy_entr_coef=p_ent_coef, last_policy_activation=last_pa, lrc=lrc, lrD__=lrD,
                                 use_noisy_targets__=use_nt, horizon__=horizon, gamma__=gamma, **default_params)
 
