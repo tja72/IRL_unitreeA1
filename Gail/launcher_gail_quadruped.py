@@ -32,7 +32,7 @@ if __name__ == '__main__':
                           use_next_states=False,
                           use_cuda=USE_CUDA,
                           discr_only_state=False,
-                          use_torque_ctrl=False)
+                          use_torque_ctrl=True)
 
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]

@@ -131,14 +131,15 @@ def experiment(n_epochs: int = 500,
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
     else:
-        action_data_path = ["../data/dataset_unitreeA1_IRL_0.npz", "../data/dataset_unitreeA1_IRL_1.npz",
-                            "../data/dataset_unitreeA1_IRL_2.npz", "../data/dataset_unitreeA1_IRL_3.npz",
-                            "../data/dataset_unitreeA1_IRL_4.npz"]
-        states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_0.npz",
-                            "../data/dataset_only_states_unitreeA1_IRL_1.npz",
-                            "../data/dataset_only_states_unitreeA1_IRL_2.npz",
-                            "../data/dataset_only_states_unitreeA1_IRL_3.npz",
-                            "../data/dataset_only_states_unitreeA1_IRL_4.npz"]
+        # first after number is action then states type
+        action_data_path = ["../data/dataset_unitreeA1_IRL_new_0_opt_opt.npz", "../data/dataset_unitreeA1_IRL_new_1_opt_opt.npz",
+                            "../data/dataset_unitreeA1_IRL_new_2_opt_opt.npz", "../data/dataset_unitreeA1_IRL_new_3_opt_opt.npz",
+                            "../data/dataset_unitreeA1_IRL_new_4_opt_opt.npz"]
+        states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_new_0_optimal.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_new_1_optimal.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_new_2_optimal.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_new_3_optimal.npz",
+                            "../data/dataset_only_states_unitreeA1_IRL_new_4_optimal.npz"]
 
     np.random.seed(seed)
     torch.random.manual_seed(seed)
