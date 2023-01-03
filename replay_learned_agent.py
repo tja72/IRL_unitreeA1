@@ -18,9 +18,13 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    agent = Serializable.load('/home/tim/Documents/quadruped_gail_unitreeA1_only_states_2022-12-21_19-24-48'
-                              '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99'
-                              '/2/agent_epoch_457_J_994.937137.msh')
+    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_2023-01-01_18-03-41/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_135_J_995.285995.msh')
+
+    #'/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
+     #                         '/train_D_n_th_epoch___3/info_constraint___0.001/lrD___5e-05/use_noisy_targets___0'
+      #                        '/horizon___1000/gamma___0.99/9/agent_epoch_67_J_995.134316.msh'
+
+
 # first and best agent '/home/tim/Documents/quadruped_vail_unitreeA1_only_states_2022-12-20_22-27-17'
     #                               '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.9/0/'
     #                               'agent_epoch_54_J_986.807868.msh'
@@ -40,6 +44,8 @@ if __name__ == '__main__':
     desired_contr_freq = 100  # hz
     n_substeps = env_freq // desired_contr_freq  # env_freq / desired_contr_freq
 
+    use_torque_ctrl = True
+
     # set a reward for logging
     reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
 
@@ -49,7 +55,7 @@ if __name__ == '__main__':
                        control_dt=(1 / desired_contr_freq))
 
     # create the environment
-    env = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps, use_torque_ctrl=True,
+    env = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps, use_torque_ctrl=use_torque_ctrl,
                     traj_params=traj_params, random_start=True,#  init_step_no=0,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
@@ -100,11 +106,22 @@ quadruped_vail_unitreeA1_only_states_2022-12-22_23-43-19 - BUT WITH 15 SAMPLES: 
     info_constraint 0.5: same but every agent is good at the beginnin; but is getting wrse a the end/not so bad mini steps
     
 quadruped_gail_unitreeA1_only_states_2022-12-23_16-11-37 - gail only states with stricter has_fallen
-much better than pictures seem. One seed is stable and gets more and more unstable but all the other mostly stable/a little dopple step with the fornt left feet at the end
+much better than pictures seem. One seed is stable and gets more and more unstable but all the other mostly stable/a little double step with the fornt left feet at the end
 
-quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07 - vail only states with torque controlwith 15 samples each with info_constraint 0.001 and 1
-
+quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07 - vail only states with torque controlwith 15 samples each with info_constraint 0.001 and 1 
+Forgot to remove stricter has fallen!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    info_constraint 0.001: all relative good 2. agent, but all are getting worse -> in the end vibrating (in the middle stumble/mini steps)
+    info_constraint 1.0: in the beginning (2.) really good -> getting worse but less worse than 0.001; only stumbles a litlle bit and sometimes small steps
+    
 quadruped_gail_unitreeA1_only_states_2022-12-27_18-58-37 - gail only states with position  with default xml (loer gain)
+Forgot to remove stricter has fallen !!!!!!!!!!!!!!!!!!!!!!
+still very shaky legs/not a nice gait. Gets a little better to the end but definitive not good
+
+quadruped_gail_unitreeA1_2023-01-01_18-03-41 - gail with optimal torques from data model with normal has_fallen
+
+quadruped_gail_unitreeA1_only_states_2023-01-02_02-28-16 - gail only states with position  with default xml (loer gain)
+
+quadruped_vail_unitreeA1_only_states_2023-01-02_02-32-15 - vail only states with torque controlwith 15 samples each with info_constraint 0.001 and 1 
 
 
 """
