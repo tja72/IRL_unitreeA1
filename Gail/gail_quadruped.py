@@ -38,7 +38,7 @@ def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
 
     trpo_standardizer = Standardizer(use_cuda=use_cuda)
     policy_params = dict(network=FullyConnectedNetwork,
-                         input_shape=mdp_info.observation_space.shape,
+                         input_shape=(len(mdp.obs_helper.observation_spec)+10, ),
                          output_shape=mdp_info.action_space.shape,
                          std_0=1.0,
                          n_features=[512, 256],
@@ -53,7 +53,7 @@ def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
                                                'weight_decay': 0.0}},
                          loss=F.mse_loss,
                          batch_size=256,
-                         input_shape=mdp_info.observation_space.shape,
+                         input_shape=(len(mdp.obs_helper.observation_spec)+10, ),
                          activations=['relu', 'relu', 'identity'],
                          standardizer=trpo_standardizer,
                          squeeze_out=False,
@@ -121,19 +121,50 @@ def experiment(n_epochs: int = 500,
                use_cuda: bool = False,
                results_dir: str = './logs',
                seed: int = 0,
-               use_torque_ctrl: bool = False):
+               use_torque_ctrl: bool = False,
+               use_2d_ctrl: bool = False,
+               tmp_dir_name: str = "."):
 
     if(discr_only_state):
         action_data_path = None
+        states_data_path = ['/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise0_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise1_optimal.npz',
+                            '/home/tim/Documents/IRL_unitreeA1/data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_optimal.npz'
+                            ]
+        """
         states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_optimal_0.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_1.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_2.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
+                            """
     else:
         # first after number is action then states type
-        action_data_path = ["../data/dataset_unitreeA1_IRL_new_0_opt_kp.npz", "../data/dataset_unitreeA1_IRL_new_1_opt_kp.npz",
-                            "../data/dataset_unitreeA1_IRL_new_2_opt_kp.npz", "../data/dataset_unitreeA1_IRL_new_3_opt_kp.npz",
+        action_data_path = ["../data/dataset_unitreeA1_IRL_new_0_opt_kp.npz",
+                            "../data/dataset_unitreeA1_IRL_new_1_opt_kp.npz",
+                            "../data/dataset_unitreeA1_IRL_new_2_opt_kp.npz",
+                            "../data/dataset_unitreeA1_IRL_new_3_opt_kp.npz",
                             "../data/dataset_unitreeA1_IRL_new_4_opt_kp.npz"]
         states_data_path = ["../data/dataset_only_states_unitreeA1_IRL_new2_0_optimal.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_new2_1_optimal.npz",
@@ -160,51 +191,96 @@ def experiment(n_epochs: int = 500,
 
     # prepare trajectory params
     if(type(states_data_path)==list) : # concatenate datasets and store for trajectory
-        temp_states_dataset=[[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        if use_2d_ctrl:
+            temp_states_dataset = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
+                                   [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+        else:
+            temp_states_dataset = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
+                                   [], [], [], [], [], [], [], [], [], [], [], [], [], []]
         for path in states_data_path:
             trajectory_files = np.load(path, allow_pickle=True)
             trajectory_files = {k: d for k, d in trajectory_files.items()}
-            trajectory = np.array([trajectory_files[key] for key in trajectory_files.keys()])
+            trajectory = np.array([trajectory_files[key].flatten() for key in trajectory_files.keys()], dtype=object)
             assert len(temp_states_dataset) == len(trajectory)
             for i in np.arange(len(temp_states_dataset)):
-                temp_states_dataset[i]=temp_states_dataset[i] + list(trajectory[i])
-        np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states.npz'),
-                 q_trunk_tx=np.array(temp_states_dataset[0]),
-                 q_trunk_ty=np.array(temp_states_dataset[1]),
-                 q_trunk_tz=np.array(temp_states_dataset[2]),
-                 q_trunk_tilt=np.array(temp_states_dataset[3]),
-                 q_trunk_list=np.array(temp_states_dataset[4]),
-                 q_trunk_rotation=np.array(temp_states_dataset[5]),
-                 q_FR_hip_joint=np.array(temp_states_dataset[6]),
-                 q_FR_thigh_joint=np.array(temp_states_dataset[7]),
-                 q_FR_calf_joint=np.array(temp_states_dataset[8]),
-                 q_FL_hip_joint=np.array(temp_states_dataset[9]),
-                 q_FL_thigh_joint=np.array(temp_states_dataset[10]),
-                 q_FL_calf_joint=np.array(temp_states_dataset[11]),
-                 q_RR_hip_joint=np.array(temp_states_dataset[12]),
-                 q_RR_thigh_joint=np.array(temp_states_dataset[13]),
-                 q_RR_calf_joint=np.array(temp_states_dataset[14]),
-                 q_RL_hip_joint=np.array(temp_states_dataset[15]),
-                 q_RL_thigh_joint=np.array(temp_states_dataset[16]),
-                 q_RL_calf_joint=np.array(temp_states_dataset[17]),
-                 dq_trunk_tx=np.array(temp_states_dataset[18]),
-                 dq_trunk_tz=np.array(temp_states_dataset[19]),
-                 dq_trunk_ty=np.array(temp_states_dataset[20]),
-                 dq_trunk_tilt=np.array(temp_states_dataset[21]),
-                 dq_trunk_list=np.array(temp_states_dataset[22]),
-                 dq_trunk_rotation=np.array(temp_states_dataset[23]),
-                 dq_FR_hip_joint=np.array(temp_states_dataset[24]),
-                 dq_FR_thigh_joint=np.array(temp_states_dataset[25]),
-                 dq_FR_calf_joint=np.array(temp_states_dataset[26]),
-                 dq_FL_hip_joint=np.array(temp_states_dataset[27]),
-                 dq_FL_thigh_joint=np.array(temp_states_dataset[28]),
-                 dq_FL_calf_joint=np.array(temp_states_dataset[29]),
-                 dq_RR_hip_joint=np.array(temp_states_dataset[30]),
-                 dq_RR_thigh_joint=np.array(temp_states_dataset[31]),
-                 dq_RR_calf_joint=np.array(temp_states_dataset[32]),
-                 dq_RL_hip_joint=np.array(temp_states_dataset[33]),
-                 dq_RL_thigh_joint=np.array(temp_states_dataset[34]),
-                 dq_RL_calf_joint=np.array(temp_states_dataset[35]))
+                temp_states_dataset[i] = temp_states_dataset[i] + list(trajectory[i])
+        if use_2d_ctrl:
+            np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states.npz'),
+                     q_trunk_tx=np.array(temp_states_dataset[0]),
+                     q_trunk_ty=np.array(temp_states_dataset[1]),
+                     q_trunk_tz=np.array(temp_states_dataset[2]),
+                     q_trunk_tilt=np.array(temp_states_dataset[3]),
+                     q_trunk_list=np.array(temp_states_dataset[4]),
+                     q_trunk_rotation=np.array(temp_states_dataset[5]),
+                     q_FR_hip_joint=np.array(temp_states_dataset[6]),
+                     q_FR_thigh_joint=np.array(temp_states_dataset[7]),
+                     q_FR_calf_joint=np.array(temp_states_dataset[8]),
+                     q_FL_hip_joint=np.array(temp_states_dataset[9]),
+                     q_FL_thigh_joint=np.array(temp_states_dataset[10]),
+                     q_FL_calf_joint=np.array(temp_states_dataset[11]),
+                     q_RR_hip_joint=np.array(temp_states_dataset[12]),
+                     q_RR_thigh_joint=np.array(temp_states_dataset[13]),
+                     q_RR_calf_joint=np.array(temp_states_dataset[14]),
+                     q_RL_hip_joint=np.array(temp_states_dataset[15]),
+                     q_RL_thigh_joint=np.array(temp_states_dataset[16]),
+                     q_RL_calf_joint=np.array(temp_states_dataset[17]),
+                     dq_trunk_tx=np.array(temp_states_dataset[18]),
+                     dq_trunk_tz=np.array(temp_states_dataset[19]),
+                     dq_trunk_ty=np.array(temp_states_dataset[20]),
+                     dq_trunk_tilt=np.array(temp_states_dataset[21]),
+                     dq_trunk_list=np.array(temp_states_dataset[22]),
+                     dq_trunk_rotation=np.array(temp_states_dataset[23]),
+                     dq_FR_hip_joint=np.array(temp_states_dataset[24]),
+                     dq_FR_thigh_joint=np.array(temp_states_dataset[25]),
+                     dq_FR_calf_joint=np.array(temp_states_dataset[26]),
+                     dq_FL_hip_joint=np.array(temp_states_dataset[27]),
+                     dq_FL_thigh_joint=np.array(temp_states_dataset[28]),
+                     dq_FL_calf_joint=np.array(temp_states_dataset[29]),
+                     dq_RR_hip_joint=np.array(temp_states_dataset[30]),
+                     dq_RR_thigh_joint=np.array(temp_states_dataset[31]),
+                     dq_RR_calf_joint=np.array(temp_states_dataset[32]),
+                     dq_RL_hip_joint=np.array(temp_states_dataset[33]),
+                     dq_RL_thigh_joint=np.array(temp_states_dataset[34]),
+                     dq_RL_calf_joint=np.array(temp_states_dataset[35]),
+                     dir_arrow=np.array(temp_states_dataset[36]))
+        else:
+            np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states.npz'),
+                     q_trunk_tx=np.array(temp_states_dataset[0]),
+                     q_trunk_ty=np.array(temp_states_dataset[1]),
+                     q_trunk_tz=np.array(temp_states_dataset[2]),
+                     q_trunk_tilt=np.array(temp_states_dataset[3]),
+                     q_trunk_list=np.array(temp_states_dataset[4]),
+                     q_trunk_rotation=np.array(temp_states_dataset[5]),
+                     q_FR_hip_joint=np.array(temp_states_dataset[6]),
+                     q_FR_thigh_joint=np.array(temp_states_dataset[7]),
+                     q_FR_calf_joint=np.array(temp_states_dataset[8]),
+                     q_FL_hip_joint=np.array(temp_states_dataset[9]),
+                     q_FL_thigh_joint=np.array(temp_states_dataset[10]),
+                     q_FL_calf_joint=np.array(temp_states_dataset[11]),
+                     q_RR_hip_joint=np.array(temp_states_dataset[12]),
+                     q_RR_thigh_joint=np.array(temp_states_dataset[13]),
+                     q_RR_calf_joint=np.array(temp_states_dataset[14]),
+                     q_RL_hip_joint=np.array(temp_states_dataset[15]),
+                     q_RL_thigh_joint=np.array(temp_states_dataset[16]),
+                     q_RL_calf_joint=np.array(temp_states_dataset[17]),
+                     dq_trunk_tx=np.array(temp_states_dataset[18]),
+                     dq_trunk_tz=np.array(temp_states_dataset[19]),
+                     dq_trunk_ty=np.array(temp_states_dataset[20]),
+                     dq_trunk_tilt=np.array(temp_states_dataset[21]),
+                     dq_trunk_list=np.array(temp_states_dataset[22]),
+                     dq_trunk_rotation=np.array(temp_states_dataset[23]),
+                     dq_FR_hip_joint=np.array(temp_states_dataset[24]),
+                     dq_FR_thigh_joint=np.array(temp_states_dataset[25]),
+                     dq_FR_calf_joint=np.array(temp_states_dataset[26]),
+                     dq_FL_hip_joint=np.array(temp_states_dataset[27]),
+                     dq_FL_thigh_joint=np.array(temp_states_dataset[28]),
+                     dq_FL_calf_joint=np.array(temp_states_dataset[29]),
+                     dq_RR_hip_joint=np.array(temp_states_dataset[30]),
+                     dq_RR_thigh_joint=np.array(temp_states_dataset[31]),
+                     dq_RR_calf_joint=np.array(temp_states_dataset[32]),
+                     dq_RL_hip_joint=np.array(temp_states_dataset[33]),
+                     dq_RL_thigh_joint=np.array(temp_states_dataset[34]),
+                     dq_RL_calf_joint=np.array(temp_states_dataset[35]))
         traj_params = dict(traj_path='./dataset_temp_concatenated_optimal_states.npz',
                            traj_dt=(1 / traj_data_freq),
                            control_dt=(1 / desired_contr_freq))
@@ -213,9 +289,48 @@ def experiment(n_epochs: int = 500,
                            traj_dt=(1 / traj_data_freq),
                            control_dt=(1 / desired_contr_freq))
 
+        # how to transform the samples/trajectories for interpolation -> get into oine dim; interpolate; retransform
+    def interpolate_map(traj):
+        traj_list = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
+                     [], [], [], [], [], [], [], [], [], [], [], []]
+        for j in range(len(traj_list)):
+            traj_list[j] = list(traj[j])
+        temp = []
+        traj_list[36] = [
+            np.arctan2(np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[3],
+                        np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[0])
+            for mat in traj[36].reshape((len(traj[0]), 9))]
+        # for mat in traj[36].reshape((len(traj[0]), 9)):
+        #    arrow = np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))
+        #   temp.append(np.arctan2(arrow[3], arrow[0]))
+        # traj_list[36] = temp
+        return np.array(traj_list)
+
+    def interpolate_remap(traj):
+        traj_list = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
+                     [], [], [], [], [], [], [], [], [], [], [], []]
+        for j in range(len(traj_list)):
+            traj_list[j] = list(traj[j])
+        traj_list[36] = [
+            np.dot(np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]]),
+                    np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))).reshape((9,)) for angle in traj[36]]
+        # for angle in traj[36]:
+        #   R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
+        #  arrow = np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))
+        # temp = temp + list(np.dot(R, arrow).reshape((9,)))
+        # traj_list[36] = temp
+        return np.array(traj_list, dtype=object)
+
+    if use_2d_ctrl:
+        traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle
+        traj_params["interpolate_remap"] = interpolate_remap  # and back
+
+
+
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
                     traj_params=traj_params, random_start=True, use_torque_ctrl=use_torque_ctrl,
+                    use_2d_ctrl=use_2d_ctrl, tmp_dir_name=tmp_dir_name,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
     if discr_only_state:
@@ -224,17 +339,20 @@ def experiment(n_epochs: int = 500,
         data_path = action_data_path
 
     # create a dataset
-    if(type(data_path) == list):
+    if(type(data_path) == list): # call create dataset for every dataset in the states list ad concatenate
         temp_expert_data = defaultdict(lambda: [])
         for path in data_path:
-            temp_data = mdp.create_dataset(data_path=path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
+            print(path)
+            temp_data = mdp.create_dataset(data_path=path, only_state=discr_only_state,
+                                           ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
             for key in temp_data:
-                temp_expert_data[key]=temp_expert_data[key] + list(temp_data[key])
+                temp_expert_data[key] = temp_expert_data[key] + list(temp_data[key])
         expert_data = dict()
         for key in temp_expert_data:
             expert_data[key] = np.array(temp_expert_data[key])
     else:
-        expert_data = mdp.create_dataset(data_path=data_path, only_state=discr_only_state, ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
+        expert_data = mdp.create_dataset(data_path=data_path, only_state=discr_only_state,
+                                         ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
 
 
 
