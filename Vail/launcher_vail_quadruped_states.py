@@ -22,7 +22,7 @@ if __name__ == '__main__':
                         hours=0,
                         minutes=0,
                         seconds=0,
-                        use_timestamp=True,
+                        use_timestamp=True
                         )
 
     default_params = dict(n_epochs=500,
@@ -33,7 +33,9 @@ if __name__ == '__main__':
                           use_next_states=True,
                           discr_only_state=True,
                           use_cuda=USE_CUDA,
-                          use_torque_ctrl=True)
+                          use_torque_ctrl=True,
+                          use_2d_ctrl=True,
+                          tmp_dir_name=".")
 
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]
@@ -43,7 +45,7 @@ if __name__ == '__main__':
     use_next_states = [1]
     horizons = [1000]
     gammas = [0.99]
-    info_constraints = [0.1, 0.5, 0.01]
+    info_constraints = [1]
 
     for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma, info_constraint in product(lrs, d_delays, plcy_ent_coefs,
                                                                       use_noisy_targets, lpa, horizons,
