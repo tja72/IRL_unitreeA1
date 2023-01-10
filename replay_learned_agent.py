@@ -18,7 +18,9 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_2023-01-01_18-03-41/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_135_J_995.285995.msh')
+    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
+                              '/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0'
+                              '/horizon___1000/gamma___0.99/1/agent_epoch_66_J_993.963958.msh')
 
     #'/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
      #                         '/train_D_n_th_epoch___3/info_constraint___0.001/lrD___5e-05/use_noisy_targets___0'
@@ -56,7 +58,7 @@ if __name__ == '__main__':
 
     # create the environment
     env = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps, use_torque_ctrl=use_torque_ctrl,
-                    traj_params=traj_params, random_start=True,#  init_step_no=0,
+                    traj_params=traj_params, random_start=False, init_step_no=0,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
     action_dim = env.info.action_space.shape[0]
@@ -122,6 +124,8 @@ quadruped_gail_unitreeA1_2023-01-01_18-03-41 - gail with optimal torques from da
 quadruped_gail_unitreeA1_only_states_2023-01-02_02-28-16 - gail only states with position  with default xml (loer gain)
 
 quadruped_vail_unitreeA1_only_states_2023-01-02_02-32-15 - vail only states with torque controlwith 15 samples each with info_constraint 0.001 and 1 
+
+quadruped_gail_unitreeA1_2023-01-03_02-43-04 - ICH GLAUBE/NICHT SICHER: gail with kp torques with reset at every step with normal has_fallen
 
 
 """
