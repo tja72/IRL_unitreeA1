@@ -214,7 +214,7 @@ def experiment(n_epochs: int = 500,
             for i in np.arange(len(temp_states_dataset)):
                 temp_states_dataset[i] = temp_states_dataset[i] + list(trajectory[i])
         if use_2d_ctrl:
-            np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states.npz'),
+            np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states'+str(seed)+'.npz'),
                      q_trunk_tx=np.array(temp_states_dataset[0]),
                      q_trunk_ty=np.array(temp_states_dataset[1]),
                      q_trunk_tz=np.array(temp_states_dataset[2]),
@@ -253,7 +253,7 @@ def experiment(n_epochs: int = 500,
                      dq_RL_calf_joint=np.array(temp_states_dataset[35]),
                      dir_arrow=np.array(temp_states_dataset[36]))
         else:
-            np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states.npz'),
+            np.savez(os.path.join('.', 'dataset_temp_concatenated_optimal_states'+str(seed)+'.npz'),
                      q_trunk_tx=np.array(temp_states_dataset[0]),
                      q_trunk_ty=np.array(temp_states_dataset[1]),
                      q_trunk_tz=np.array(temp_states_dataset[2]),
@@ -290,7 +290,7 @@ def experiment(n_epochs: int = 500,
                      dq_RL_hip_joint=np.array(temp_states_dataset[33]),
                      dq_RL_thigh_joint=np.array(temp_states_dataset[34]),
                      dq_RL_calf_joint=np.array(temp_states_dataset[35]))
-        traj_params = dict(traj_path='./dataset_temp_concatenated_optimal_states.npz',
+        traj_params = dict(traj_path='./dataset_temp_concatenated_optimal_states'+str(seed)+'.npz',
                            traj_dt=(1 / traj_data_freq),
                            control_dt=(1 / desired_contr_freq))
 

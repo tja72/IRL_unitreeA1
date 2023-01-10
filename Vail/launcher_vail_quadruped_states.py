@@ -17,7 +17,7 @@ if __name__ == '__main__':
                         partition="amd2,amd",
                         n_exps=N_SEEDS,
                         n_cores=6,
-                        memory_per_core=500,
+                        memory_per_core=2000,
                         days=3,
                         hours=0,
                         minutes=0,
