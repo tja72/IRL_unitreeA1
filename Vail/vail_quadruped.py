@@ -136,28 +136,28 @@ def experiment(n_epochs: int = 500,
 
         states_data_path = ['../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise1_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_optimal.npz'
+#                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_optimal.npz',
+ #                           '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise0_optimal.npz',
+  #                          '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise1_optimal.npz',
+   #                         '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_optimal.npz',
+    #                        '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise0_optimal.npz',
+     #                       '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise1_optimal.npz',
+      #                      '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_optimal.npz',
+       #                     '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise0_optimal.npz',
+        #                    '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise1_optimal.npz',
+         #                   '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_optimal.npz',
+          #                  '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise0_optimal.npz',
+           ##                 '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise1_optimal.npz',
+             #               '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_optimal.npz',
+              #              '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise0_optimal.npz',
+               #             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise1_optimal.npz',
+                #            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_optimal.npz',
+                 #           '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise0_optimal.npz',
+                  #          '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise1_optimal.npz',
+                   #         '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_optimal.npz',
+                    #        '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise0_optimal.npz',
+                     #       '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise1_optimal.npz',
+                      #      '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_optimal.npz'
                             ]
 
         """
@@ -200,12 +200,9 @@ def experiment(n_epochs: int = 500,
 
     # prepare trajectory params
     if (type(states_data_path) == list):  # concatenate datasets and store for trajectory
-        if use_2d_ctrl:
-            temp_states_dataset = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
-                                   [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
-        else:
-            temp_states_dataset = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
-                                   [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+
+        temp_states_dataset = [list() for j in range(37)]
+
         for path in states_data_path:
             trajectory_files = np.load(path, allow_pickle=True)
             trajectory_files = {k: d for k, d in trajectory_files.items()}
@@ -302,8 +299,8 @@ def experiment(n_epochs: int = 500,
 
     # how to transform the samples/trajectories for interpolation -> get into oine dim; interpolate; retransform
     def interpolate_map(traj):
-        traj_list = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
-                     [], [], [], [], [], [], [], [], [], [], [], []]
+
+        traj_list = [list() for j in range(len(traj))]
         for j in range(len(traj_list)):
             traj_list[j] = list(traj[j])
         temp = []
@@ -317,8 +314,8 @@ def experiment(n_epochs: int = 500,
         return np.array(traj_list)
 
     def interpolate_remap(traj):
-        traj_list = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
-                     [], [], [], [], [], [], [], [], [], [], [], []]
+        traj_list = [list() for j in range(len(traj))]
+
         for j in range(len(traj_list)):
             traj_list[j] = list(traj[j])
         traj_list[36] = [np.dot(np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]]), np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))).reshape((9,)) for angle in traj[36]]

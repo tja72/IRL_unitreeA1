@@ -18,9 +18,9 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
-                              '/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0'
-                              '/horizon___1000/gamma___0.99/1/agent_epoch_66_J_993.963958.msh')
+    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_2023-01-03_02-43-04'
+                              '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99'
+                              '/2/agent_epoch_463_J_996.746820.msh')
 
     #'/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
      #                         '/train_D_n_th_epoch___3/info_constraint___0.001/lrD___5e-05/use_noisy_targets___0'
@@ -52,7 +52,7 @@ if __name__ == '__main__':
     reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
 
     # prepare trajectory params
-    traj_params = dict(traj_path="./Vail/dataset_temp_concatenated_optimal_states.npz",
+    traj_params = dict(traj_path="./data/dataset_only_states_unitreeA1_IRL_new2_0_optimal.npz",
                        traj_dt=(1 / traj_data_freq),
                        control_dt=(1 / desired_contr_freq))
 
@@ -116,8 +116,8 @@ Forgot to remove stricter has fallen!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     info_constraint 1.0: in the beginning (2.) really good -> getting worse but less worse than 0.001; only stumbles a litlle bit and sometimes small steps
     
 quadruped_gail_unitreeA1_only_states_2022-12-27_18-58-37 - gail only states with position  with default xml (loer gain)
-Forgot to remove stricter has fallen !!!!!!!!!!!!!!!!!!!!!!
-still very shaky legs/not a nice gait. Gets a little better to the end but definitive not good
+    Forgot to remove stricter has fallen !!!!!!!!!!!!!!!!!!!!!!
+    still very shaky legs/not a nice gait. Gets a little better to the end but definitive not good
 
 quadruped_gail_unitreeA1_2023-01-01_18-03-41 - gail with optimal torques from data model with normal has_fallen
 
@@ -126,6 +126,11 @@ quadruped_gail_unitreeA1_only_states_2023-01-02_02-28-16 - gail only states with
 quadruped_vail_unitreeA1_only_states_2023-01-02_02-32-15 - vail only states with torque controlwith 15 samples each with info_constraint 0.001 and 1 
 
 quadruped_gail_unitreeA1_2023-01-03_02-43-04 - ICH GLAUBE/NICHT SICHER: gail with kp torques with reset at every step with normal has_fallen
+    okay in the beginning but starts making small steps/double steps really fast
+
+
+quadruped_gail_unitreeA1_only_states_2023-01-10_16-51-33 - gail with 2D walk, normal has_fallen. 8 dir a 50k dataset; multidm obs spec
+quadruped_vail_unitreeA1_only_states_2023-01-10_16-44-04 - vail info_constraint=1 with 2D walk, normal has_fallen. 8 dir a 50k dataset; multidm obs spec
 
 
 """
