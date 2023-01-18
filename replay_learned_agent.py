@@ -18,13 +18,21 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_2023-01-03_02-43-04'
-                              '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99'
-                              '/2/agent_epoch_463_J_996.746820.msh')
+    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-02_02-32-15'
+     #                         '/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0'
+      #                        '/horizon___1000/gamma___0.99/9/agent_epoch_75_J_995.323562.msh')
 
-    #'/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
+    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
      #                         '/train_D_n_th_epoch___3/info_constraint___0.001/lrD___5e-05/use_noisy_targets___0'
-      #                        '/horizon___1000/gamma___0.99/9/agent_epoch_67_J_995.134316.msh'
+      #                        '/horizon___1000/gamma___0.99/9/agent_epoch_67_J_995.134316.msh')
+
+    #comparisons of has_fallen vail 1.0
+    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-11_00-12-28/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_87_J_990.560180.msh')
+    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_53_J_995.285133.msh')
+
+
+    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-01-10_16-51-33/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_305_J_565.105567.msh')
+
 
 
 # first and best agent '/home/tim/Documents/quadruped_vail_unitreeA1_only_states_2022-12-20_22-27-17'
@@ -38,7 +46,7 @@ if __name__ == '__main__':
 
 
     gamma = 0.99
-    horizon = 1000
+    horizon = 500
 
     # define env and data frequencies
     env_freq = 1000  # hz, added here as a reminder
@@ -47,18 +55,79 @@ if __name__ == '__main__':
     n_substeps = env_freq // desired_contr_freq  # env_freq / desired_contr_freq
 
     use_torque_ctrl = True
+    use_2d_ctrl = True
 
     # set a reward for logging
     reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
+    if use_2d_ctrl:  # velocity in direction arrow as reward
+        """
+        Explanation of one liner/reward below:
+        velo2 = np.array([self._data.qvel[0], self._data.qvel[2]])
+        rot_mat2 = np.dot(self._direction_xmat.reshape((3,3)), np.array([[0, 0, 1],[0, 1, 0],[1, 0, 0]]))
+        direction2 = np.dot(rot_mat2, np.array([1000, 0, 0]))[:2]  # TODO here is something wrong
+        reward3 = np.dot(velo2, direction2) / np.linalg.norm(direction2) -0.4
+        """
+        reward_callback = lambda state, action, next_state: np.exp(- np.square(
+            np.dot(np.array([state[16], state[18]]),
+                   np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
+                          np.array([1000, 0, 0]))[:2])
+            / np.linalg.norm(np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
+                                    np.array([1000, 0, 0]))[:2]) - 0.4))
+
+
+
 
     # prepare trajectory params
     traj_params = dict(traj_path="./data/dataset_only_states_unitreeA1_IRL_new2_0_optimal.npz",
                        traj_dt=(1 / traj_data_freq),
                        control_dt=(1 / desired_contr_freq))
 
+
+
+
+    # how to transform the samples/trajectories for interpolation -> get into oine dim; interpolate; retransform
+    def interpolate_map(traj):
+
+        traj_list = [list() for j in range(len(traj))]
+        for j in range(len(traj_list)):
+            traj_list[j] = list(traj[j])
+        temp = []
+        traj_list[36] = [np.arctan2(np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[3],
+                           np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[0])
+                for mat in traj[36]]
+        #for mat in traj[36].reshape((len(traj[0]), 9)):
+        #    arrow = np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))
+         #   temp.append(np.arctan2(arrow[3], arrow[0]))
+        #traj_list[36] = temp
+        return np.array(traj_list)
+
+    def interpolate_remap(traj):
+        traj_list = [list() for j in range(len(traj))]
+
+        for j in range(len(traj_list)):
+            traj_list[j] = list(traj[j])
+        traj_list[36] = [np.dot(np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]]), np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))).reshape((9,)) for angle in traj[36]]
+        #for angle in traj[36]:
+         #   R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
+          #  arrow = np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))
+           # temp = temp + list(np.dot(R, arrow).reshape((9,)))
+        #traj_list[36] = temp
+        return np.array(traj_list, dtype=object)
+
+    if use_2d_ctrl:
+        traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle
+        traj_params["interpolate_remap"] = interpolate_remap  # and back
+        traj_params["traj_path"] = "./Vail/dataset_temp_concatenated_optimal_states0.npz"
+
+
+
+
+
+
     # create the environment
     env = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps, use_torque_ctrl=use_torque_ctrl,
-                    traj_params=traj_params, random_start=False, init_step_no=0,
+                    traj_params=traj_params, random_start=True, #init_step_no=0,
+                    use_2d_ctrl=use_2d_ctrl, tmp_dir_name='.',
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
     action_dim = env.info.action_space.shape[0]
@@ -120,10 +189,20 @@ quadruped_gail_unitreeA1_only_states_2022-12-27_18-58-37 - gail only states with
     still very shaky legs/not a nice gait. Gets a little better to the end but definitive not good
 
 quadruped_gail_unitreeA1_2023-01-01_18-03-41 - gail with optimal torques from data model with normal has_fallen
+    makes lots of double steps/unstable walk
 
 quadruped_gail_unitreeA1_only_states_2023-01-02_02-28-16 - gail only states with position  with default xml (loer gain)
+    no good gait; very unstable
 
 quadruped_vail_unitreeA1_only_states_2023-01-02_02-32-15 - vail only states with torque controlwith 15 samples each with info_constraint 0.001 and 1 
+    info_constraint 0.001 most ok in the beginning (only a little double steps/limbing) but getting worse quick; but nearly all limbing in the beginning
+    info_constraint 1.0 all in the beginning okay/good; but not as good as I remember with stricter has_fallen; getting quick worse -> starting to limbing; a few in the beginning perfect
+        most also limb in the beginning a little bit
+    but cannot compare earlier agents cause I store only 4 per seed; and these are the ones that are good with stricter has_fallen
+    
+
+
+
 
 quadruped_gail_unitreeA1_2023-01-03_02-43-04 - ICH GLAUBE/NICHT SICHER: gail with kp torques with reset at every step with normal has_fallen
     okay in the beginning but starts making small steps/double steps really fast
@@ -132,5 +211,7 @@ quadruped_gail_unitreeA1_2023-01-03_02-43-04 - ICH GLAUBE/NICHT SICHER: gail wit
 quadruped_gail_unitreeA1_only_states_2023-01-10_16-51-33 - gail with 2D walk, normal has_fallen. 8 dir a 50k dataset; multidm obs spec
 quadruped_vail_unitreeA1_only_states_2023-01-10_16-44-04 - vail info_constraint=1 with 2D walk, normal has_fallen. 8 dir a 50k dataset; multidm obs spec
 
+quadruped_vail_unitreeA1_only_states_2023-01-11_00-12-28 - vail only states torque with info_constraint 1.0 and less strict has_fallen; one sample to epoch 150 to test differences between has_fallen; tores as many agents as first run with less strict has fallen -> test second stred agent
+    seems less stable than with stricter has fallen; slight limbing
 
 """

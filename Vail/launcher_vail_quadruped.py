@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     default_params = dict(n_epochs=500,
                           n_steps_per_epoch=100000,
-                          n_epochs_save=150 if N_SEEDS == 15 else 50,
+                          n_epochs_save=50,
                           n_eval_episodes=10,
                           n_steps_per_fit=1000,
                           use_next_states=False,
