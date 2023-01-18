@@ -127,29 +127,29 @@ def experiment(n_epochs: int = 500,
 
     if(discr_only_state):
         action_data_path = None
-        states_data_path = ['../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise0_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise1_optimal.npz',
+        states_data_path = ['../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_backward_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BL_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_BR_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FL_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_forward_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_FR_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_left_optimal.npz',
-                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise0_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise1_optimal.npz',
+                            '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_noise2_optimal.npz',
                             '../data/2D_Walking/dataset_only_states_unitreeA1_IRL_50k_right_optimal.npz'
                             ]
         """
@@ -379,6 +379,7 @@ def experiment(n_epochs: int = 500,
     #plot_data_callbacks = PlotDataset(mdp.info)
     core = Core(agent, mdp)#, callback_step=plot_data_callbacks)
 
+    print("Starting Training")
     # gail train loop
     for epoch in range(n_epochs):
         with catchtime() as t:
