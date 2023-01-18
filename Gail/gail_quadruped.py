@@ -188,6 +188,20 @@ def experiment(n_epochs: int = 500,
 
     # set a reward for logging
     reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
+    if use_2d_ctrl: # velocity in direction arrow as reward
+        """
+        Explanation of one liner/reward below:
+        velo2 = np.array([self._data.qvel[0], self._data.qvel[2]])
+        rot_mat2 = np.dot(self._direction_xmat.reshape((3,3)), np.array([[0, 0, 1],[0, 1, 0],[1, 0, 0]]))
+        direction2 = np.dot(rot_mat2, np.array([1000, 0, 0]))[:2]  # TODO here is something wrong
+        reward3 = np.dot(velo2, direction2) / np.linalg.norm(direction2) -0.4
+        """
+        reward_callback = lambda state, action, next_state: np.exp(- np.square(
+            np.dot(np.array([state[16], state[18]]),
+                   np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
+                          np.array([1000, 0, 0]))[:2])
+            / np.linalg.norm(np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
+                                    np.array([1000, 0, 0]))[:2]) - 0.4))
 
     # prepare trajectory params
     if(type(states_data_path)==list) : # concatenate datasets and store for trajectory
