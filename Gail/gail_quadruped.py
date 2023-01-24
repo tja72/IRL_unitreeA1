@@ -300,15 +300,19 @@ def experiment(n_epochs: int = 500,
                            control_dt=(1 / desired_contr_freq))
 
         # how to transform the samples/trajectories for interpolation -> get into oine dim; interpolate; retransform
+
     def interpolate_map(traj):
         traj_list = [list() for j in range(len(traj))]
-        for j in range(len(traj_list)):
-            traj_list[j] = list(traj[j])
+        for i in range(len(traj_list)):
+            if i in [3, 4, 5]:
+                traj_list[i] = list(np.unwrap(traj[i]))
+            else:
+                traj_list[i] = list(traj[i])
         temp = []
-        traj_list[36] = [
+        traj_list[36] = list(np.unwrap([
             np.arctan2(np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[3],
-                        np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[0])
-            for mat in traj[36]]
+                       np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[0])
+            for mat in traj[36]]))
         # for mat in traj[36].reshape((len(traj[0]), 9)):
         #    arrow = np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))
         #   temp.append(np.arctan2(arrow[3], arrow[0]))

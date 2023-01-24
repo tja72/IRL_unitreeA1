@@ -31,10 +31,7 @@ if __name__ == '__main__':
     #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_53_J_995.285133.msh')
 
 
-    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-01-10_16-51-33/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_305_J_565.105567.msh')
-
-
-
+    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-10_16-44-04/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_304_J_587.302963.msh')
 # first and best agent '/home/tim/Documents/quadruped_vail_unitreeA1_only_states_2022-12-20_22-27-17'
     #                               '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.9/0/'
     #                               'agent_epoch_54_J_986.807868.msh'
@@ -46,7 +43,7 @@ if __name__ == '__main__':
 
 
     gamma = 0.99
-    horizon = 500
+    horizon = 300
 
     # define env and data frequencies
     env_freq = 1000  # hz, added here as a reminder
@@ -87,18 +84,21 @@ if __name__ == '__main__':
 
     # how to transform the samples/trajectories for interpolation -> get into oine dim; interpolate; retransform
     def interpolate_map(traj):
-
         traj_list = [list() for j in range(len(traj))]
-        for j in range(len(traj_list)):
-            traj_list[j] = list(traj[j])
+        for i in range(len(traj_list)):
+            if i in [3, 4, 5]:
+                traj_list[i] = list(np.unwrap(traj[i]))
+            else:
+                traj_list[i] = list(traj[i])
         temp = []
-        traj_list[36] = [np.arctan2(np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[3],
-                           np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[0])
-                for mat in traj[36]]
-        #for mat in traj[36].reshape((len(traj[0]), 9)):
+        traj_list[36] = list(np.unwrap([
+            np.arctan2(np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[3],
+                       np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[0])
+            for mat in traj[36]]))
+        # for mat in traj[36].reshape((len(traj[0]), 9)):
         #    arrow = np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))
-         #   temp.append(np.arctan2(arrow[3], arrow[0]))
-        #traj_list[36] = temp
+        #   temp.append(np.arctan2(arrow[3], arrow[0]))
+        # traj_list[36] = temp
         return np.array(traj_list)
 
     def interpolate_remap(traj):
@@ -126,7 +126,7 @@ if __name__ == '__main__':
 
     # create the environment
     env = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps, use_torque_ctrl=use_torque_ctrl,
-                    traj_params=traj_params, random_start=True, #init_step_no=0,
+                    traj_params=traj_params, random_start=True,# init_step_no=140000,
                     use_2d_ctrl=use_2d_ctrl, tmp_dir_name='.',
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
@@ -213,5 +213,9 @@ quadruped_vail_unitreeA1_only_states_2023-01-10_16-44-04 - vail info_constraint=
 
 quadruped_vail_unitreeA1_only_states_2023-01-11_00-12-28 - vail only states torque with info_constraint 1.0 and less strict has_fallen; one sample to epoch 150 to test differences between has_fallen; tores as many agents as first run with less strict has fallen -> test second stred agent
     seems less stable than with stricter has fallen; slight limbing
-
+    
+    
+    
+quadruped_gail_unitreeA1_only_states_2023-01-19_01-11-20 - new stricter has fallen, updated dataset/correct direction arrow and adjusted traj with finetuned angles, troque only states gail
+quadruped_vail_unitreeA1_only_states_2023-01-19_01-22-09 - new stricter has fallen, updated dataset/correct direction arrow and adjusted traj with finetuned angles, troque only states vail 
 """
