@@ -31,7 +31,7 @@ if __name__ == '__main__':
     #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_53_J_995.285133.msh')
 
 
-    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-10_16-44-04/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_304_J_587.302963.msh')
+    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-19_01-22-09/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_303_J_979.765065.msh')
 # first and best agent '/home/tim/Documents/quadruped_vail_unitreeA1_only_states_2022-12-20_22-27-17'
     #                               '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.9/0/'
     #                               'agent_epoch_54_J_986.807868.msh'
@@ -101,17 +101,23 @@ if __name__ == '__main__':
         # traj_list[36] = temp
         return np.array(traj_list)
 
+
     def interpolate_remap(traj):
         traj_list = [list() for j in range(len(traj))]
-
-        for j in range(len(traj_list)):
-            traj_list[j] = list(traj[j])
-        traj_list[36] = [np.dot(np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]]), np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))).reshape((9,)) for angle in traj[36]]
-        #for angle in traj[36]:
-         #   R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
-          #  arrow = np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))
-           # temp = temp + list(np.dot(R, arrow).reshape((9,)))
-        #traj_list[36] = temp
+        for i in range(len(traj_list)):
+            if i in [3, 4, 5]:
+                traj_list[i] = [angle % np.pi if angle > 0 else angle % -np.pi for angle in traj[i]]
+            else:
+                traj_list[i] = list(traj[i])
+        traj_list[36] = [
+            np.dot(np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]]),
+                   np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))).reshape((9,)) for angle in
+            [angle % np.pi if angle > 0 else angle % -np.pi for angle in traj[36]]]
+        # for angle in traj[36]:
+        #   R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
+        #  arrow = np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))
+        # temp = temp + list(np.dot(R, arrow).reshape((9,)))
+        # traj_list[36] = temp
         return np.array(traj_list, dtype=object)
 
     if use_2d_ctrl:
