@@ -212,7 +212,7 @@ def experiment(n_epochs: int = 500,
         for path in states_data_path:
             trajectory_files = np.load(path, allow_pickle=True)
             trajectory_files = {k: d for k, d in trajectory_files.items()}
-            trajectory = np.array([trajectory_files[key].flatten() for key in trajectory_files.keys()], dtype=object)
+            trajectory = np.array([list(trajectory_files[key]) for key in trajectory_files.keys()], dtype=object)
             assert len(temp_states_dataset) == len(trajectory)
             for i in np.arange(len(temp_states_dataset)):
                 temp_states_dataset[i] = temp_states_dataset[i] + list(trajectory[i])
