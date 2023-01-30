@@ -13,6 +13,8 @@ from torch.utils.tensorboard import SummaryWriter
 
 from mushroom_rl.core import Core
 from mushroom_rl.environments.mujoco_envs.quadrupeds import UnitreeA1
+from mushroom_rl.environments.mujoco_envs.quadrupeds.unitreeA1 import interpolate_remap, interpolate_map
+
 from mushroom_rl.policy import GaussianTorchPolicy
 from mushroom_rl.utils.dataset import compute_J, compute_episodes_length
 from mushroom_rl.core.logger.logger import Logger
@@ -319,25 +321,7 @@ def experiment(n_epochs: int = 500,
         # traj_list[36] = temp
         return np.array(traj_list)
 
-    def interpolate_remap(traj):
-        traj_list = [list() for j in range(len(traj))]
-        for i in range(len(traj_list)):
-            if i in [3, 4, 5]:
-                traj_list[i] = [(angle + np.pi) % (2 * np.pi) - np.pi for angle in traj[i]]
-            else:
-                traj_list[i] = list(traj[i])
-        traj_list[36] = [  # angle = (angle+np.pi) % (2*np.pi)-np.pi -> inverse np.unwrap
-            np.dot(np.array(
-                [[np.cos((angle + np.pi) % (2 * np.pi) - np.pi), -np.sin((angle + np.pi) % (2 * np.pi) - np.pi), 0],
-                 [np.sin((angle + np.pi) % (2 * np.pi) - np.pi), np.cos((angle + np.pi) % (2 * np.pi) - np.pi), 0],
-                 [0, 0, 1]]),
-                   np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))).reshape((9,)) for angle in traj[36]]
-        # for angle in traj[36]:
-        #   R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
-        #  arrow = np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))
-        # temp = temp + list(np.dot(R, arrow).reshape((9,)))
-        # traj_list[36] = temp
-        return np.array(traj_list, dtype=object)
+
 
     if use_2d_ctrl:
         traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle

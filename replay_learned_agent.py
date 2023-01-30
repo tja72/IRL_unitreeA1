@@ -11,6 +11,8 @@ from mushroom_rl.core import Core
 from mushroom_rl.utils.dataset import compute_J, compute_episodes_length
 from mushroom_rl.utils.callbacks import PlotDataset
 
+from mushroom_rl.environments.mujoco_envs.quadrupeds.unitreeA1 import interpolate_remap, interpolate_map
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -81,44 +83,6 @@ if __name__ == '__main__':
 
 
 
-
-    # how to transform the samples/trajectories for interpolation -> get into oine dim; interpolate; retransform
-    def interpolate_map(traj):
-        traj_list = [list() for j in range(len(traj))]
-        for i in range(len(traj_list)):
-            if i in [3, 4, 5]:
-                traj_list[i] = list(np.unwrap(traj[i]))
-            else:
-                traj_list[i] = list(traj[i])
-        temp = []
-        traj_list[36] = list(np.unwrap([
-            np.arctan2(np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[3],
-                       np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))[0])
-            for mat in traj[36]]))
-        # for mat in traj[36].reshape((len(traj[0]), 9)):
-        #    arrow = np.dot(mat.reshape((3, 3)), np.array([[0, 1, 0], [0, 0, 1], [1, 0, 0]])).reshape((9,))
-        #   temp.append(np.arctan2(arrow[3], arrow[0]))
-        # traj_list[36] = temp
-        return np.array(traj_list)
-
-
-    def interpolate_remap(traj):
-        traj_list = [list() for j in range(len(traj))]
-        for i in range(len(traj_list)):
-            if i in [3, 4, 5]:
-                traj_list[i] = [angle % np.pi if angle > 0 else angle % -np.pi for angle in traj[i]]
-            else:
-                traj_list[i] = list(traj[i])
-        traj_list[36] = [
-            np.dot(np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]]),
-                   np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))).reshape((9,)) for angle in
-            [angle % np.pi if angle > 0 else angle % -np.pi for angle in traj[36]]]
-        # for angle in traj[36]:
-        #   R = np.array([[np.cos(angle), -np.sin(angle), 0], [np.sin(angle), np.cos(angle), 0], [0, 0, 1]])
-        #  arrow = np.array([0, 0, 1, 1, 0, 0, 0, 1, 0]).reshape((3, 3))
-        # temp = temp + list(np.dot(R, arrow).reshape((9,)))
-        # traj_list[36] = temp
-        return np.array(traj_list, dtype=object)
 
     if use_2d_ctrl:
         traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle
