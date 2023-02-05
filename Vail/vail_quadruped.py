@@ -36,7 +36,7 @@ def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
 
     trpo_standardizer = Standardizer(use_cuda=use_cuda)
     policy_params = dict(network=FullyConnectedNetwork,
-                         input_shape=(len(mdp.obs_helper.observation_spec)+10, ),#(47,),#mdp_info.observation_space.shape,
+                         input_shape=(len(mdp.obs_helper.observation_spec)+12, ),#(47,),#mdp_info.observation_space.shape,
                          output_shape=mdp_info.action_space.shape,
                          std_0=1.0,
                          n_features=[512, 256],
@@ -51,7 +51,7 @@ def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
                                                'weight_decay': 0.0}},
                          loss=F.mse_loss,
                          batch_size=256,
-                         input_shape=(len(mdp.obs_helper.observation_spec)+10, ), #(47,),#mdp_info.observation_space.shape, #TODO richtig so? -------------------------------
+                         input_shape=(len(mdp.obs_helper.observation_spec)+12, ), #(47,),#mdp_info.observation_space.shape, #TODO richtig so? -------------------------------
                          activations=['relu', 'relu', 'identity'],
                          standardizer=trpo_standardizer,
                          squeeze_out=False,
@@ -169,6 +169,7 @@ def experiment(n_epochs: int = 500,
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
         """
+        states_data_path = '/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_05_18_59_37/states.npz'
     else:
         action_data_path = ["../data/dataset_unitreeA1_IRL_0.npz",
                             "../data/dataset_unitreeA1_IRL_1.npz",
@@ -214,7 +215,7 @@ def experiment(n_epochs: int = 500,
             / np.linalg.norm(np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
                                     np.array([1000, 0, 0]))[:2]) - 0.4))
 
-
+    #TODO obsolete?
     # prepare trajectory params
     if (type(states_data_path) == list):  # concatenate datasets and store for trajectory
 
@@ -346,7 +347,8 @@ def experiment(n_epochs: int = 500,
         for path in data_path:
             print(path)
             temp_data = mdp.create_dataset(data_path=path, only_state=discr_only_state,
-                                           ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
+                                           ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states,
+                                         interpolate_map=interpolate_map, interpolate_remap=interpolate_remap)
             for key in temp_data:
                 temp_expert_data[key] = temp_expert_data[key] + list(temp_data[key])
         expert_data = dict()
@@ -354,7 +356,8 @@ def experiment(n_epochs: int = 500,
             expert_data[key] = np.array(temp_expert_data[key])
     else:
         expert_data = mdp.create_dataset(data_path=data_path, only_state=discr_only_state,
-                                         ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
+                                         ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states,
+                                         interpolate_map=interpolate_map, interpolate_remap=interpolate_remap)
 
 
     discrim_obs_mask = np.arange(expert_data["states"].shape[1])

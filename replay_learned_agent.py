@@ -33,7 +33,7 @@ if __name__ == '__main__':
     #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_53_J_995.285133.msh')
 
 
-    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-19_01-22-09/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_303_J_979.765065.msh')
+    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-19_01-22-09/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_78_J_988.618738.msh')
 # first and best agent '/home/tim/Documents/quadruped_vail_unitreeA1_only_states_2022-12-20_22-27-17'
     #                               '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.9/0/'
     #                               'agent_epoch_54_J_986.807868.msh'
@@ -87,7 +87,7 @@ if __name__ == '__main__':
     if use_2d_ctrl:
         traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle
         traj_params["interpolate_remap"] = interpolate_remap  # and back
-        traj_params["traj_path"] = "./Vail/dataset_temp_concatenated_optimal_states0.npz"
+        traj_params["traj_path"] = "./Gail/dataset_temp_concatenated_optimal_states0.npz"
 
 
 
@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
     # create the environment
     env = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps, use_torque_ctrl=use_torque_ctrl,
-                    traj_params=traj_params, random_start=True,# init_step_no=140000,
+                    traj_params=traj_params, random_start=False, init_step_no=1,
                     use_2d_ctrl=use_2d_ctrl, tmp_dir_name='.',
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
