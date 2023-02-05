@@ -161,7 +161,7 @@ def experiment(n_epochs: int = 500,
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
                             """
-        states_data_path = '/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_05_18_59_37/states.npz' #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_02_15_25_04/states.npz'
+        states_data_path = '../data/2D_Walking/states_2023_02_05_21_05_01.npz'
     else:
         # first after number is action then states type
         action_data_path = ["../data/dataset_unitreeA1_IRL_new_0_opt_kp.npz",
