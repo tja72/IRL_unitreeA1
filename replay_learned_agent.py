@@ -1,3 +1,4 @@
+import os.path
 import sys
 
 import torch.random
@@ -12,6 +13,10 @@ from mushroom_rl.utils.dataset import compute_J, compute_episodes_length
 from mushroom_rl.utils.callbacks import PlotDataset
 
 from mushroom_rl.environments.mujoco_envs.quadrupeds.unitreeA1 import interpolate_remap, interpolate_map
+from mushroom_rl.environments.mujoco_envs.humanoids.trajectory import Trajectory
+
+
+import os
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,20 +25,8 @@ import matplotlib.pyplot as plt
 
 
 if __name__ == '__main__':
-    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-02_02-32-15'
-     #                         '/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0'
-      #                        '/horizon___1000/gamma___0.99/9/agent_epoch_75_J_995.323562.msh')
-
-    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07'
-     #                         '/train_D_n_th_epoch___3/info_constraint___0.001/lrD___5e-05/use_noisy_targets___0'
-      #                        '/horizon___1000/gamma___0.99/9/agent_epoch_67_J_995.134316.msh')
-
-    #comparisons of has_fallen vail 1.0
-    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-11_00-12-28/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_87_J_990.560180.msh')
-    #agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2022-12-27_16-47-07/train_D_n_th_epoch___3/info_constraint___1.0/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_53_J_995.285133.msh')
 
 
-    agent = Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-01-19_01-22-09/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_78_J_988.618738.msh')
 # first and best agent '/home/tim/Documents/quadruped_vail_unitreeA1_only_states_2022-12-20_22-27-17'
     #                               '/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.9/0/'
     #                               'agent_epoch_54_J_986.807868.msh'
@@ -49,7 +42,7 @@ if __name__ == '__main__':
 
     # define env and data frequencies
     env_freq = 1000  # hz, added here as a reminder
-    traj_data_freq = 500  # hz, added here as a reminder
+    traj_data_freq = 100  # hz, added here as a reminder
     desired_contr_freq = 100  # hz
     n_substeps = env_freq // desired_contr_freq  # env_freq / desired_contr_freq
 
@@ -84,10 +77,14 @@ if __name__ == '__main__':
 
 
 
+
+
+
+
     if use_2d_ctrl:
         traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle
         traj_params["interpolate_remap"] = interpolate_remap  # and back
-        traj_params["traj_path"] = "./Gail/dataset_temp_concatenated_optimal_states0.npz"
+        traj_params["traj_path"] = './data/states_2023_02_05_21_05_01.npz'
 
 
 
@@ -96,28 +93,44 @@ if __name__ == '__main__':
 
     # create the environment
     env = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps, use_torque_ctrl=use_torque_ctrl,
-                    traj_params=traj_params, random_start=False, init_step_no=1,
+                    traj_params=traj_params, random_start=True,# init_step_no=1,
                     use_2d_ctrl=use_2d_ctrl, tmp_dir_name='.',
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
     action_dim = env.info.action_space.shape[0]
     print("Dimensionality of Obs-space:", env.info.observation_space.shape[0])
     print("Dimensionality of Act-space:", env.info.action_space.shape[0])
+    #TODO core zeile 183 nicht auskommentieren !!!!!!!!!!!!!!!!!!!!!!!!!
+    agents = [
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_199_J_926.825775.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_291_J_962.179259.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_373_J_980.038177.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_484_J_972.202374.msh')
+    ]
+    agents = [
+        Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-06_01-45-29/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_64_J_967.454764.msh'),
+        Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-06_01-45-29/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_106_J_970.853061.msh')
+    ]
+    for i in range(len(agents)):
 
-    #plot_data_callbacks = PlotDataset(env.info)
-    #core = Core(mdp=env, agent=agent, callback_step=plot_data_callbacks)
-    core = Core(mdp=env, agent=agent)
-    #core.agent.policy.deterministic = False
-    dataset, env_info = core.evaluate(n_episodes=100, render=True, get_env_info=True)
-    for sample in dataset:
-        print("Has fallen: ", sample[4]) #sample = (state, action, reward, next_state, absorbing, last)
-    R_mean = np.mean(compute_J(dataset))
-    J_mean = np.mean(compute_J(dataset, gamma=gamma))
-    L = np.mean(compute_episodes_length(dataset))
+        print(agents[i])
+        #plot_data_callbacks = PlotDataset(env.info)
+        #core = Core(mdp=env, agent=agent, callback_step=plot_data_callbacks)
+        core = Core(mdp=env, agent=agents[i])
+        #core.agent.policy.deterministic = False
+        dataset, env_info = core.evaluate(n_episodes=10, render=True, get_env_info=True)
 
-    print("J_mean: ", J_mean)
-    print("R_mean: ", R_mean)
-    print("L_mean:", L)
+        R_mean = np.mean(compute_J(dataset))
+        J_mean = np.mean(compute_J(dataset, gamma=gamma))
+        L = np.mean(compute_episodes_length(dataset))
+
+        print("J_mean: ", J_mean)
+        print("R_mean: ", R_mean)
+        print("L_mean:", L)
 
 
 """
@@ -188,4 +201,13 @@ quadruped_vail_unitreeA1_only_states_2023-01-11_00-12-28 - vail only states torq
     
 quadruped_gail_unitreeA1_only_states_2023-01-19_01-11-20 - new stricter has fallen, updated dataset/correct direction arrow and adjusted traj with finetuned angles, troque only states gail
 quadruped_vail_unitreeA1_only_states_2023-01-19_01-22-09 - new stricter has fallen, updated dataset/correct direction arrow and adjusted traj with finetuned angles, troque only states vail 
+    problem: interpolation and draw only examples/traj from the first half -> backward walking
+
+
+still npc not perfect-> slightly goes to the side
+quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39 - gail, torque; new one long traj file; velo as goal, fixed npc model/dataset, interpolation .......
+    gail is really really good in forward and backward and doesn't get worse over time but has the same problems with sideways and diagonal
+quadruped_vail_unitreeA1_only_states_2023-02-06_01-45-29 - vail info_ =1 torque; new one long traj file; velo as goal, fixed npc model/dataset, interpolation .......
+    I found epochs in vail where the forward and backward walking is okay but the sideways/diagonal walking isn't really a gait. Either it just jumps on the same place, it just walks for/backwards or it's just lifting the legs but setting it down again. From my point of view it seems like the has_fallen is to strict and when lifting the legs it tilts a little bit so it wants to fix that immediatly. But that would explain only one of the three effects
+
 """
