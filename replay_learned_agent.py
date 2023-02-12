@@ -12,7 +12,7 @@ from mushroom_rl.core import Core
 from mushroom_rl.utils.dataset import compute_J, compute_episodes_length
 from mushroom_rl.utils.callbacks import PlotDataset
 
-from mushroom_rl.environments.mujoco_envs.quadrupeds.unitreeA1 import interpolate_remap, interpolate_map
+from mushroom_rl.environments.mujoco_envs.quadrupeds.unitreeA1 import interpolate_remap, interpolate_map, reward_callback
 from mushroom_rl.environments.mujoco_envs.humanoids.trajectory import Trajectory
 
 
@@ -49,22 +49,6 @@ if __name__ == '__main__':
     use_torque_ctrl = True
     use_2d_ctrl = True
 
-    # set a reward for logging
-    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
-    if use_2d_ctrl:  # velocity in direction arrow as reward
-        """
-        Explanation of one liner/reward below:
-        velo2 = np.array([self._data.qvel[0], self._data.qvel[2]])
-        rot_mat2 = np.dot(self._direction_xmat.reshape((3,3)), np.array([[0, 0, 1],[0, 1, 0],[1, 0, 0]]))
-        direction2 = np.dot(rot_mat2, np.array([1000, 0, 0]))[:2]  # TODO here is something wrong
-        reward3 = np.dot(velo2, direction2) / np.linalg.norm(direction2) -0.4
-        """
-        reward_callback = lambda state, action, next_state: np.exp(- np.square(
-            np.dot(np.array([state[16], state[18]]),
-                   np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
-                          np.array([1000, 0, 0]))[:2])
-            / np.linalg.norm(np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
-                                    np.array([1000, 0, 0]))[:2]) - 0.4))
 
 
 
@@ -84,7 +68,7 @@ if __name__ == '__main__':
     if use_2d_ctrl:
         traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle
         traj_params["interpolate_remap"] = interpolate_remap  # and back
-        traj_params["traj_path"] = './data/states_2023_02_05_21_05_01.npz'
+        traj_params["traj_path"] = './data/states_2023_02_10_00_08_17.npz'
 
 
 
@@ -103,18 +87,8 @@ if __name__ == '__main__':
     #TODO core zeile 183 nicht auskommentieren !!!!!!!!!!!!!!!!!!!!!!!!!
     agents = [
         Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_199_J_926.825775.msh'),
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_291_J_962.179259.msh'),
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_373_J_980.038177.msh'),
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_484_J_972.202374.msh')
-    ]
-    agents = [
-        Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-06_01-45-29/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_64_J_967.454764.msh'),
-        Serializable.load('/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-06_01-45-29/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_106_J_970.853061.msh')
-    ]
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-10_00-26-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_146_J_755.960853.msh'),
+       ]
     for i in range(len(agents)):
 
         print(agents[i])
@@ -122,8 +96,8 @@ if __name__ == '__main__':
         #core = Core(mdp=env, agent=agent, callback_step=plot_data_callbacks)
         core = Core(mdp=env, agent=agents[i])
         #core.agent.policy.deterministic = False
-        dataset, env_info = core.evaluate(n_episodes=10, render=True, get_env_info=True)
-
+        dataset, env_info = core.evaluate(n_episodes=1, render=True, get_env_info=True)
+        A = compute_J(dataset)
         R_mean = np.mean(compute_J(dataset))
         J_mean = np.mean(compute_J(dataset, gamma=gamma))
         L = np.mean(compute_episodes_length(dataset))
@@ -131,6 +105,15 @@ if __name__ == '__main__':
         print("J_mean: ", J_mean)
         print("R_mean: ", R_mean)
         print("L_mean:", L)
+    """
+       Traj minimal height: -0.1845338476
+   Traj max x-rotation: -0.17452686699999997
+   Traj max y-rotation: -0.05434850219999987
+   
+   Traj minimal height: -0.1898665265
+   Traj max x-rotation: -0.19923093520000013
+   Traj max y-rotation: -0.1320023989000001
+   """
 
 
 """
@@ -209,5 +192,9 @@ quadruped_gail_unitreeA1_only_states_2023-02-06_01-43-39 - gail, torque; new one
     gail is really really good in forward and backward and doesn't get worse over time but has the same problems with sideways and diagonal
 quadruped_vail_unitreeA1_only_states_2023-02-06_01-45-29 - vail info_ =1 torque; new one long traj file; velo as goal, fixed npc model/dataset, interpolation .......
     I found epochs in vail where the forward and backward walking is okay but the sideways/diagonal walking isn't really a gait. Either it just jumps on the same place, it just walks for/backwards or it's just lifting the legs but setting it down again. From my point of view it seems like the has_fallen is to strict and when lifting the legs it tilts a little bit so it wants to fix that immediatly. But that would explain only one of the three effects
+
+
+quadruped_gail_unitreeA1_only_states_2023-02-10_00-26-25 - gail same as aboe but with a dataset only sidewalking
+    problem: wrong reward for logging/storing agent
 
 """

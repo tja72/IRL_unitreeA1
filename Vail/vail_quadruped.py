@@ -12,7 +12,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from mushroom_rl.core import Core
 from mushroom_rl.environments.mujoco_envs.quadrupeds import UnitreeA1
-from mushroom_rl.environments.mujoco_envs.quadrupeds.unitreeA1 import interpolate_remap, interpolate_map
+from mushroom_rl.environments.mujoco_envs.quadrupeds.unitreeA1 import interpolate_remap, interpolate_map, reward_callback
 
 from mushroom_rl.policy import GaussianTorchPolicy
 from mushroom_rl.utils.dataset import compute_J, compute_episodes_length
@@ -197,23 +197,8 @@ def experiment(n_epochs: int = 500,
     desired_contr_freq = 100     # hz
     n_substeps = env_freq // desired_contr_freq    # env_freq / desired_contr_freq
 
-    # set a reward for logging
-    reward_callback = lambda state, action, next_state: np.exp(- np.square(state[16] - 0.6))  # x-velocity as reward
 
-    if use_2d_ctrl: # velocity in direction arrow as reward
-        """
-        Explanation of one liner/reward below:
-        velo2 = np.array([self._data.qvel[0], self._data.qvel[2]])
-        rot_mat2 = np.dot(self._direction_xmat.reshape((3,3)), np.array([[0, 0, 1],[0, 1, 0],[1, 0, 0]]))
-        direction2 = np.dot(rot_mat2, np.array([1000, 0, 0]))[:2]  # TODO here is something wrong
-        reward3 = np.dot(velo2, direction2) / np.linalg.norm(direction2) -0.4
-        """
-        reward_callback = lambda state, action, next_state: np.exp(- np.square(
-            np.dot(np.array([state[16], state[18]]),
-                   np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
-                          np.array([1000, 0, 0]))[:2])
-            / np.linalg.norm(np.dot(np.dot(state[34:43].reshape((3, 3)), np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]])),
-                                    np.array([1000, 0, 0]))[:2]) - 0.4))
+
 
     #TODO obsolete?
     # prepare trajectory params
@@ -249,8 +234,8 @@ def experiment(n_epochs: int = 500,
                      q_RL_thigh_joint=np.array(temp_states_dataset[16]),
                      q_RL_calf_joint=np.array(temp_states_dataset[17]),
                      dq_trunk_tx=np.array(temp_states_dataset[18]),
-                     dq_trunk_tz=np.array(temp_states_dataset[19]),
-                     dq_trunk_ty=np.array(temp_states_dataset[20]),
+                     dq_trunk_ty=np.array(temp_states_dataset[19]),
+                     dq_trunk_tz=np.array(temp_states_dataset[20]),
                      dq_trunk_tilt=np.array(temp_states_dataset[21]),
                      dq_trunk_list=np.array(temp_states_dataset[22]),
                      dq_trunk_rotation=np.array(temp_states_dataset[23]),
@@ -288,8 +273,8 @@ def experiment(n_epochs: int = 500,
                      q_RL_thigh_joint=np.array(temp_states_dataset[16]),
                      q_RL_calf_joint=np.array(temp_states_dataset[17]),
                      dq_trunk_tx=np.array(temp_states_dataset[18]),
-                     dq_trunk_tz=np.array(temp_states_dataset[19]),
-                     dq_trunk_ty=np.array(temp_states_dataset[20]),
+                     dq_trunk_ty=np.array(temp_states_dataset[19]),
+                     dq_trunk_tz=np.array(temp_states_dataset[20]),
                      dq_trunk_tilt=np.array(temp_states_dataset[21]),
                      dq_trunk_list=np.array(temp_states_dataset[22]),
                      dq_trunk_rotation=np.array(temp_states_dataset[23]),
