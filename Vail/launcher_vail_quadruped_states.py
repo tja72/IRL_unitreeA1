@@ -10,7 +10,7 @@ if __name__ == '__main__':
     USE_CUDA = False
 
     JOBLIB_PARALLEL_JOBS = 1  # or os.cpu_count() to use all cores
-    N_SEEDS = 3
+    N_SEEDS = 3 #10
 
     launcher = Launcher(exp_name='quadruped_vail_unitreeA1_only_states',
                         python_file='vail_quadruped',
@@ -37,15 +37,15 @@ if __name__ == '__main__':
                           use_2d_ctrl=True,
                           tmp_dir_name=".")
 
-    lrs = [(1e-4, 5e-5)]
-    d_delays = [3]
+    lrs = [(1e-4, 5e-5)]  # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
+    d_delays = [3] # [1, 3, 5, 10]
     plcy_ent_coefs = [1e-3]
     use_noisy_targets = [0]
     lpa = ["identity"]
-    use_next_states = [1]
+    use_next_states = [1] # [0, 1]
     horizons = [1000]
     gammas = [0.99]
-    info_constraints = [1]
+    info_constraints = [1]# [1, 0.1, 0.01]
 
     for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma, info_constraint in product(lrs, d_delays, plcy_ent_coefs,
                                                                       use_noisy_targets, lpa, horizons,

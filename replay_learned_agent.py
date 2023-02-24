@@ -68,7 +68,7 @@ if __name__ == '__main__':
     if use_2d_ctrl:
         traj_params["interpolate_map"] = interpolate_map  # transforms 9dim rot matrix into one rot angle
         traj_params["interpolate_remap"] = interpolate_remap  # and back
-        traj_params["traj_path"] = './data/states_2023_02_10_00_08_17.npz'
+        traj_params["traj_path"] = './data/states_2023_02_13_14_53_50.npz'
 
 
 
@@ -84,11 +84,40 @@ if __name__ == '__main__':
     action_dim = env.info.action_space.shape[0]
     print("Dimensionality of Obs-space:", env.info.observation_space.shape[0])
     print("Dimensionality of Act-space:", env.info.action_space.shape[0])
-    #TODO core zeile 183 nicht auskommentieren !!!!!!!!!!!!!!!!!!!!!!!!!
+    """
     agents = [
         Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-10_00-26-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_146_J_755.960853.msh'),
-       ]
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_65_J_974.635314.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_145_J_974.749549.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_200_J_973.474543.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-13_21-54-24/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_221_J_982.343283.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-13_21-54-24/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_304_J_970.560817.msh'),
+        #Serializable.load(
+        #    ''),
+        #Serializable.load(
+        #    ''),
+        #Serializable.load(
+        #    ''),
+        #Serializable.load(
+        #    ''),
+    ]"""
+
+    agents = [
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-13_21-54-24/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_221_J_982.343283.msh'),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_200_J_973.474543.msh')
+    ]
+
+     # good:             '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_145_J_974.749549.msh'),
+    # good best            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_200_J_973.474543.msh'),
+    # good best            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-13_21-54-24/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_221_J_982.343283.msh'),
+    # good             '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-02-13_21-54-24/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_304_J_970.560817.msh'),
+    #TODO core zeile 183 nicht auskommentieren !!!!!!!!!!!!!!!!!!!!!!!!!
     for i in range(len(agents)):
 
         print(agents[i])
@@ -96,7 +125,7 @@ if __name__ == '__main__':
         #core = Core(mdp=env, agent=agent, callback_step=plot_data_callbacks)
         core = Core(mdp=env, agent=agents[i])
         #core.agent.policy.deterministic = False
-        dataset, env_info = core.evaluate(n_episodes=1, render=True, get_env_info=True)
+        dataset, env_info = core.evaluate(n_episodes=10, render=True, get_env_info=True)
         A = compute_J(dataset)
         R_mean = np.mean(compute_J(dataset))
         J_mean = np.mean(compute_J(dataset, gamma=gamma))
@@ -196,5 +225,17 @@ quadruped_vail_unitreeA1_only_states_2023-02-06_01-45-29 - vail info_ =1 torque;
 
 quadruped_gail_unitreeA1_only_states_2023-02-10_00-26-25 - gail same as aboe but with a dataset only sidewalking
     problem: wrong reward for logging/storing agent
+    
+    
+quadruped_gail_unitreeA1_only_states_2023-02-12_17-18-30 - again only sidewalking but with new reward and better dataset
+    seems to work
+    
+
+quadruped_gail_unitreeA1_only_states_2023-02-13_21-54-24 - all directions; updated reward function, better dataset with substeps in mpc model; new stricter has fallen
+    takes longer to learn - ab 200 good-okay; manchmal verlent es auch wieder ab 300 -> vllt fängt danach wieder?
+
+quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37 - vail with info 1; all directions; updated reward function, better dataset with substeps in mpc model; new stricter has fallen
+    lern schnell aber verlernt auch schnell; wirklich gut läufe ca 10-200- scheint besser als gail
+
 
 """
