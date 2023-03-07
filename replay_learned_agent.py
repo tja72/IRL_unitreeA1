@@ -236,6 +236,18 @@ quadruped_gail_unitreeA1_only_states_2023-02-13_21-54-24 - all directions; updat
 
 quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37 - vail with info 1; all directions; updated reward function, better dataset with substeps in mpc model; new stricter has fallen
     lern schnell aber verlernt auch schnell; wirklich gut läufe ca 10-200- scheint besser als gail
+    
+    
+    
+quadruped_vail_unitreeA1_only_states_2023-02-24_20-18-47 - new dataset with next steps calc only with desired velo;; rotate dataset with random angle
+quadruped_gail_unitreeA1_only_states_2023-02-24_20-21-08 - new dataset with next steps calc only with desired velo;; rotate dataset with random angle
+
+quadruped_gail_unitreeA1_only_states_2023-02-25_21-24-40 - new test run nothing changed except output vars if error#
+
+quadruped_gail_unitreeA1_only_states_2023-03-01_20-03-29 - fit adapted: rotation also for next_states
+
+quadruped_gail_unitreeA1_only_states_2023-03-02_01-15-14 - add different rot for each sample in fit_discriminator
+
 
 
 """

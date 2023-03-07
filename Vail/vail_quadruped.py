@@ -169,7 +169,7 @@ def experiment(n_epochs: int = 500,
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_3.npz",
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
         """
-        states_data_path = '../data/states_2023_02_23_19_48_33.npz'
+        states_data_path = '../data/states_2023_02_23_19_48_33.npz' #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz'# '../data/states_2023_02_23_19_48_33.npz'
     else:
         action_data_path = ["../data/dataset_unitreeA1_IRL_0.npz",
                             "../data/dataset_unitreeA1_IRL_1.npz",

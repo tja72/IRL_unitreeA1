@@ -162,7 +162,7 @@ def experiment(n_epochs: int = 500,
                             "../data/dataset_only_states_unitreeA1_IRL_optimal_4.npz"]
                             """
         # TODO ??? move path again into launcher; same for vail ???
-        states_data_path = '../data/states_2023_02_12_14_53_12.npz'
+        states_data_path = '../data/states_2023_02_23_19_48_33.npz'
     else:
         # first after number is action then states type
         action_data_path = ["../data/dataset_unitreeA1_IRL_new_0_opt_kp.npz",
