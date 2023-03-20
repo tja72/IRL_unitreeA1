@@ -24,7 +24,9 @@ if __name__ == '__main__':
                         use_timestamp=True,
                         )
 
-    default_params = dict(n_epochs=500,
+    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz',
+                          action_states_data_path=None,
+                          n_epochs=500,
                           n_steps_per_epoch=100000,
                           n_epochs_save=50,
                           n_eval_episodes=10,
