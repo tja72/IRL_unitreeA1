@@ -24,7 +24,9 @@ if __name__ == '__main__':
                         use_timestamp=True,
                         )
 
-    default_params = dict(n_epochs=500,
+    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz',
+                          action_data_path='../data/actions_torque_2023_02_23_19_48_33.npz',
+                          n_epochs=500,
                           n_steps_per_epoch=100000,
                           n_epochs_save=50,
                           n_eval_episodes=10,
@@ -32,7 +34,9 @@ if __name__ == '__main__':
                           use_next_states=False,
                           use_cuda=USE_CUDA,
                           discr_only_state=False,
-                          use_torque_ctrl=True)
+                          use_torque_ctrl=True,
+                          use_2d_ctrl=True,
+                          tmp_dir_name=".")
 
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]

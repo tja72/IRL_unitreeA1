@@ -105,7 +105,7 @@ def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
 
 
 def experiment(states_data_path: str,
-               action_states_data_path: str = None,
+               action_data_path: str = None,
                n_epochs: int = 500,
                n_steps_per_epoch: int = 10000,
                n_steps_per_fit: int = 1024,
@@ -129,7 +129,7 @@ def experiment(states_data_path: str,
                use_2d_ctrl: bool = False,
                tmp_dir_name: str = "."):
 
-    assert (discr_only_state and action_states_data_path is None) or (not discr_only_state and action_states_data_path is not None)
+    assert discr_only_state == (action_data_path is None)
     # either only states or with actions
 
     np.random.seed(seed)
@@ -161,13 +161,10 @@ def experiment(states_data_path: str,
                     use_2d_ctrl=use_2d_ctrl, tmp_dir_name=tmp_dir_name,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
-    if discr_only_state:
-        data_path = states_data_path
-    else:
-        data_path = action_states_data_path
+
 
     #create dataset
-    expert_data = mdp.create_dataset(data_path=data_path, only_state=discr_only_state,
+    expert_data = mdp.create_dataset(data_path=states_data_path, actions_path=action_data_path, only_state=discr_only_state,
                                      ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states,
                                      interpolate_map=interpolate_map, interpolate_remap=interpolate_remap)
 
