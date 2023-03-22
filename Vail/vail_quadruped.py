@@ -157,16 +157,15 @@ def experiment(states_data_path: str,
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    traj_params=traj_params, random_start=True, use_torque_ctrl=use_torque_ctrl,
-                    use_2d_ctrl=use_2d_ctrl, tmp_dir_name=tmp_dir_name,
+                    traj_params=traj_params, random_start=True, setup_random_rot=True,
+                    use_torque_ctrl=use_torque_ctrl, use_2d_ctrl=use_2d_ctrl, tmp_dir_name=tmp_dir_name,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 
 
 
     #create dataset
-    expert_data = mdp.create_dataset(data_path=states_data_path, actions_path=action_data_path, only_state=discr_only_state,
-                                     ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states,
-                                     interpolate_map=interpolate_map, interpolate_remap=interpolate_remap)
+    expert_data = mdp.create_dataset(actions_path=action_data_path, only_state=discr_only_state,
+                                     ignore_keys=["q_trunk_tx", "q_trunk_ty"], use_next_states=use_next_states)
 
 
     discrim_obs_mask = np.arange(expert_data["states"].shape[1])
