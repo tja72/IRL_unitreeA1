@@ -69,6 +69,20 @@ if __name__ == '__main__':
         Serializable.load(
             '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_250_J_851.637429.msh'),# auch ganz ok
     ]
+    agents = [ # GAIL
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'),  # zögerlich aber ok
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
+    ]
     """
     agents = [ # VAIL
         Serializable.load(
@@ -100,7 +114,7 @@ if __name__ == '__main__':
         #core = Core(mdp=env, agent=agent, callback_step=plot_data_callbacks)
         core = Core(mdp=env, agent=agents[i])
         #core.agent.policy.deterministic = False
-        dataset, env_info = core.evaluate(n_episodes=10, render=True, get_env_info=True)
+        dataset, env_info = core.evaluate(n_episodes=25, render=False, get_env_info=True)
         A = compute_J(dataset)
         R_mean = np.mean(compute_J(dataset))
         J_mean = np.mean(compute_J(dataset, gamma=gamma))
