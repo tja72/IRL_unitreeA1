@@ -38,7 +38,7 @@ if __name__ == '__main__':
                           use_2d_ctrl=True,
                           tmp_dir_name=".")
 
-    lrs = [(1e-4, 5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
+    lrs = [(5e-05, 2.5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
     d_delays = [3] # [1, 3, 5, 10]
     plcy_ent_coefs = [1e-3] # [1e-3, 1e-2, 1e-3, 1e-4]
     use_noisy_targets = [0]
