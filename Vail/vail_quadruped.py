@@ -104,7 +104,7 @@ def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
     return agent
 
 
-def experiment(states_data_path: str,
+def experiment(states_data_path: str = None,
                action_data_path: str = None,
                n_epochs: int = 500,
                n_steps_per_epoch: int = 10000,

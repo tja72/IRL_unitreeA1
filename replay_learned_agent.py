@@ -258,4 +258,8 @@ quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25 - same aber mit winkel 
 quadruped_gail_unitreeA1_only_states_2023-03-20_13-08-13 - only one seed
 quadruped_vail_unitreeA1_only_states_2023-03-20_13-51-54 - same mit 3 seeds
 
+quadruped_gail_unitreeA1_only_states_2023-03-22_19-38-43 - new learning rates (5e-05, 2.5e-5) and n_eval_episodes to 25
+quadruped_vail_unitreeA1_only_states_2023-03-22_19-38-54 - new learning rates (2.5e-05, 1.25e-5) and n_eval_episodes to 25
+
+
 """
