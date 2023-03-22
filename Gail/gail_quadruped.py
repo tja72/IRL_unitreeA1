@@ -125,9 +125,6 @@ def experiment(states_data_path: str = None,
                use_2d_ctrl: bool = False,
                tmp_dir_name: str = "."):
 
-    assert discr_only_state == (action_data_path is None)
-    # either only states or with actions
-
 
     np.random.seed(seed)
     torch.random.manual_seed(seed)
