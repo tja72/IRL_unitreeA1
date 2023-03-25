@@ -47,7 +47,7 @@ if __name__ == '__main__':
     use_next_states = [1] # [0, 1]
     horizons = [1000]
     gammas = [0.99]
-    info_constraints = [0.5, 0.1]# [1, 0.1, 0.01]
+    info_constraints = [0.1]# [1, 0.1, 0.01]
 
     for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma, info_constraint in product(lrs, d_delays, plcy_ent_coefs,
                                                                       use_noisy_targets, lpa, horizons,
