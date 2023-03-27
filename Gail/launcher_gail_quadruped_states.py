@@ -24,9 +24,9 @@ if __name__ == '__main__':
                         use_timestamp=True,
                         )
 
-    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz',
+    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz', #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz',#
                           action_data_path=None,
-                          n_epochs=300,
+                          n_epochs=400,
                           n_steps_per_epoch=100000,
                           n_epochs_save=50,
                           n_eval_episodes=25,
@@ -38,7 +38,7 @@ if __name__ == '__main__':
                           use_2d_ctrl=True,
                           tmp_dir_name=".")
 
-    lrs = [(1e-4, 2.5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
+    lrs = [(1e-4, 5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
     d_delays = [3] # [1, 3, 5, 10]
     plcy_ent_coefs = [1e-3] # [1e-3, 1e-2, 1e-3, 1e-4]
     use_noisy_targets = [0]
