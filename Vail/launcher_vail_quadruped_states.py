@@ -10,7 +10,7 @@ if __name__ == '__main__':
     USE_CUDA = False
 
     JOBLIB_PARALLEL_JOBS = 1  # or os.cpu_count() to use all cores
-    N_SEEDS = 3 #10
+    N_SEEDS = 5 #10
 
     launcher = Launcher(exp_name='quadruped_vail_unitreeA1_only_states',
                         python_file='vail_quadruped',

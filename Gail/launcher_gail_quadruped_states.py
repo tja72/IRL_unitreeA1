@@ -10,7 +10,7 @@ if __name__ == '__main__':
     USE_CUDA = False
 
     JOBLIB_PARALLEL_JOBS = 1  # or os.cpu_count() to use all cores
-    N_SEEDS = 3 # 10 seeds 
+    N_SEEDS = 5 # 10 seeds
 
     launcher = Launcher(exp_name='quadruped_gail_unitreeA1_only_states',
                         python_file='gail_quadruped',
@@ -26,7 +26,7 @@ if __name__ == '__main__':
 
     default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33_straight.npz', #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz',#
                           action_data_path=None,
-                          n_epochs=400,
+                          n_epochs=300,
                           n_steps_per_epoch=100000,
                           n_epochs_save=50,
                           n_eval_episodes=25,
