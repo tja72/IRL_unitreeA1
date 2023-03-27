@@ -316,5 +316,11 @@ jobs ür thesis: bis 300
     torque only states ablation
     torque only states ohne rotation
     torque only states rotation
+    
+    
+quadruped_gail_unitreeA1_only_states_2023-03-27_17-15-58 torque only states, 5 seed, 300 epochs straight walking
+quadruped_vail_unitreeA1_only_states_2023-03-27_17-16-15
+    
+    
 """
 
