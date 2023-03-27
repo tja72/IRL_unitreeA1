@@ -39,7 +39,7 @@ if __name__ == '__main__':
     setup_random_rot = True
 
     # prepare trajectory params
-    traj_params = dict(traj_path='./data/states_2023_02_23_19_48_33.npz',
+    traj_params = dict(traj_path='/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz',#'./data/states_2023_02_23_19_48_33.npz',
                        traj_dt=(1 / traj_data_freq),
                        control_dt=(1 / desired_contr_freq),
                        interpolate_map=interpolate_map,
@@ -56,6 +56,25 @@ if __name__ == '__main__':
     print("Dimensionality of Act-space:", env.info.action_space.shape[0])
 
     agents = [ # GAIL
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_262_J_865.322601.msh'
+        ),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_302_J_785.845821.msh'
+        ),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_271_J_833.611911.msh'
+        ),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_309_J_808.107385.msh'
+        ),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_266_J_845.631505.msh'
+        ),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_336_J_755.456104.msh' # schrott
+        ),
+        """
         #Serializable.load(
          #   '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_184_J_811.450205.msh'),
         Serializable.load(
@@ -68,21 +87,8 @@ if __name__ == '__main__':
             '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_195_J_868.019246.msh'), # auch ganz ok
         Serializable.load(
             '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_250_J_851.637429.msh'),# auch ganz ok
-    ]
-    agents = [ # GAIL
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'),  # zögerlich aber ok
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
-        Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_217_J_850.133653.msh'), #zögerlich aber ok
-    ]
+    """]
+
     """
     agents = [ # VAIL
         Serializable.load(
@@ -102,6 +108,20 @@ if __name__ == '__main__':
         Serializable.load(
             '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-20_13-51-54/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_179_J_774.394044.msh'),
     ]"""
+
+    agents = [ # new Vail
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_28_J_827.556303.msh'
+        ),
+        Serializable.load( # 0.1
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_96_J_827.653476.msh'
+        ),
+        Serializable.load( # 0.1
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_19_J_827.042710.msh'
+        ),
+        Serializable.load(
+            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_51_J_822.053921.msh'
+        )]
 
      # good:             '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_145_J_974.749549.msh'),
     # good best            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_200_J_973.474543.msh'),
@@ -123,7 +143,6 @@ if __name__ == '__main__':
         print("J_mean: ", J_mean)
         print("R_mean: ", R_mean)
         print("L_mean:", L)
-
 
 """
 copy agent: scp -r ta11pajo@lcluster16.hrz.tu-darmstadt.de:/work/scratch/ta11pajo/quadruped_vail_2022-12-15_02-27-23/ /home/tim/Documents/IRL_unitreeA1/
@@ -255,11 +274,47 @@ quadruped_gail_unitreeA1_only_states_2023-03-19_12-06-47 - same aber mit einem k
 quadruped_gail_unitreeA1_only_states_2023-03-20_01-19-26 - random zwischen zwei winkeln 0,pi/2; fit discrim für jeden unterschiedlichen winkel zwischen den beiden werten(choice); rotation von policy datensatz in setup in unitree geschoben -> weniger complex (2winkel) und policy daten kommen aus tatsächicher situatuion
 
 quadruped_gail_unitreeA1_only_states_2023-03-20_22-29-25 - same aber mit winkel zwischen 0 und 2pi
+    really good after epoch 250 - not sure how to increase it
 quadruped_gail_unitreeA1_only_states_2023-03-20_13-08-13 - only one seed
 quadruped_vail_unitreeA1_only_states_2023-03-20_13-51-54 - same mit 3 seeds
+    not good; unstable-> seem like behavior is too complex
+    wrong reward
+    
+quadruped_gail_unitreeA1_only_states_2023-03-22_20-30-41 - new learning rates (5e-05, 2.5e-5) and n_eval_episodes to 25
+quadruped_vail_unitreeA1_only_states_2023-03-22_20-42-39 - new learning rates (2.5e-05, 1.25e-5) and n_eval_episodes to 25
+    both unstable
+    wrong reward
 
-quadruped_gail_unitreeA1_only_states_2023-03-22_19-38-43 - new learning rates (5e-05, 2.5e-5) and n_eval_episodes to 25
-quadruped_vail_unitreeA1_only_states_2023-03-22_19-38-54 - new learning rates (2.5e-05, 1.25e-5) and n_eval_episodes to 25
+quadruped_vail_unitreeA1_only_states_2023-03-23_18-14-50 - with info constraint 0.1, 0.5 and normal lrs
+quadruped_gail_unitreeA1_only_states_2023-03-23_18-32-58 - nromal lrc but decreased lrD
+    wrong reward
 
 
+quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21 - info 0.1 - and new reward function - pls stores better agents
+quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56 - with normal lrs
+
+
+quadruped_vail_unitreeA1_only_states_2023-03-26_22-58-19 - half learning rates and info constraint 0.1, 0.01
+
+Gail:
+    letzte laufen mit richtigem reward hat sieht instabiler aus als der erste lauf bevor allen änderungen obwohl gleiche parameter
+    auswerten noch
+    
+Vail:
+    kp
+    gerade laufen weniger lr mit verschiedenen info & normal mit info 0.1
+    warten was kommt
+    lernt sehr langsam mit geringeren lrs - vllt nur lrd niedriger
+    vllt neuen run mit normalen parametern (glaube nicht sinnvoll)
+    mit normalen lr lernt zu schnell: kann sofot stehen aber schritte erst irgendwann danach und auch nicht richtige richtung etc
+
+
+jobs ür thesis: bis 300
+    torque only states
+    position only states
+    torque action states
+    torque only states ablation
+    torque only states ohne rotation
+    torque only states rotation
 """
+

@@ -25,7 +25,7 @@ if __name__ == '__main__':
                         use_timestamp=True
                         )
 
-    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz',
+    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33_straight.npz',
                           action_data_path=None,
                           n_epochs=300,
                           n_steps_per_epoch=100000,
@@ -37,9 +37,10 @@ if __name__ == '__main__':
                           use_cuda=USE_CUDA,
                           use_torque_ctrl=True,
                           use_2d_ctrl=True,
-                          tmp_dir_name=".")
+                          tmp_dir_name=".",
+                          setup_random_rot=False)
 
-    lrs = [(2.5e-05, 1.25e-5)]  # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
+    lrs = [(1e-05, 5e-5)]  # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
     d_delays = [3] # [1, 3, 5, 10]
     plcy_ent_coefs = [1e-3]
     use_noisy_targets = [0]
@@ -47,7 +48,7 @@ if __name__ == '__main__':
     use_next_states = [1] # [0, 1]
     horizons = [1000]
     gammas = [0.99]
-    info_constraints = [0.1, 0.001]# [1, 0.1, 0.01]
+    info_constraints = [1]# [1, 0.1, 0.01]
 
     for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma, info_constraint in product(lrs, d_delays, plcy_ent_coefs,
                                                                       use_noisy_targets, lpa, horizons,

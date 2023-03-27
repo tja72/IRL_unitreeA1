@@ -127,7 +127,8 @@ def experiment(states_data_path: str = None,
                seed: int = 0,
                use_torque_ctrl: bool = False,
                use_2d_ctrl: bool = False,
-               tmp_dir_name: str = "."):
+               tmp_dir_name: str = ".",
+               setup_random_rot: bool = False):
 
     np.random.seed(seed)
     torch.random.manual_seed(seed)
@@ -154,7 +155,7 @@ def experiment(states_data_path: str = None,
 
     # create the environment
     mdp = UnitreeA1(timestep=1 / env_freq, gamma=gamma, horizon=horizon, n_substeps=n_substeps,
-                    traj_params=traj_params, random_start=True, setup_random_rot=True,
+                    traj_params=traj_params, random_start=True, setup_random_rot=setup_random_rot,
                     use_torque_ctrl=use_torque_ctrl, use_2d_ctrl=use_2d_ctrl, tmp_dir_name=tmp_dir_name,
                     goal_reward="custom", goal_reward_params=dict(reward_callback=reward_callback))
 

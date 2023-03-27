@@ -24,7 +24,7 @@ if __name__ == '__main__':
                         use_timestamp=True,
                         )
 
-    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz', #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz',#
+    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33_straight.npz', #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz',#
                           action_data_path=None,
                           n_epochs=400,
                           n_steps_per_epoch=100000,
@@ -36,7 +36,8 @@ if __name__ == '__main__':
                           use_cuda=USE_CUDA,
                           use_torque_ctrl=True,
                           use_2d_ctrl=True,
-                          tmp_dir_name=".")
+                          tmp_dir_name=".",
+                          setup_random_rot=False)
 
     lrs = [(1e-4, 5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
     d_delays = [3] # [1, 3, 5, 10]
