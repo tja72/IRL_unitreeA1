@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 if __name__ == '__main__':
 
     gamma = 0.99
-    horizon = 1000
+    horizon = 300
 
     # define env and data frequencies
     env_freq = 1000  # hz, added here as a reminder
@@ -111,16 +111,22 @@ if __name__ == '__main__':
 
     agents = [ # new Vail
         Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_28_J_827.556303.msh'
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_239_J_925.027498.msh'
         ),
         Serializable.load( # 0.1
-            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_96_J_827.653476.msh'
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/0/agent_epoch_299_J_961.860226.msh'
         ),
         Serializable.load( # 0.1
-            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_19_J_827.042710.msh'
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_232_J_931.230079.msh'
+        ),
+        Serializable.load(  # 0.1
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_265_J_958.930238.msh'
+        ),
+        Serializable.load(  # 0.1
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_220_J_901.619972.msh'
         ),
         Serializable.load(
-            '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-03-25_15-02-21/train_D_n_th_epoch___3/info_constraint___0.1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/1/agent_epoch_51_J_822.053921.msh'
+            '/media/tim/929F-6E96/thesis/quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56/train_D_n_th_epoch___3/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_293_J_944.716062.msh'
         )]
 
      # good:             '/media/tim/929F-6E96/thesis/quadruped_vail_unitreeA1_only_states_2023-02-13_22-00-37/train_D_n_th_epoch___3/info_constraint___1/lrD___5e-05/use_noisy_targets___0/horizon___1000/gamma___0.99/2/agent_epoch_145_J_974.749549.msh'),
@@ -134,7 +140,7 @@ if __name__ == '__main__':
         #core = Core(mdp=env, agent=agent, callback_step=plot_data_callbacks)
         core = Core(mdp=env, agent=agents[i])
         #core.agent.policy.deterministic = False
-        dataset, env_info = core.evaluate(n_episodes=25, render=False, get_env_info=True)
+        dataset, env_info = core.evaluate(n_episodes=10, render=True, get_env_info=True)
         A = compute_J(dataset)
         R_mean = np.mean(compute_J(dataset))
         J_mean = np.mean(compute_J(dataset, gamma=gamma))
@@ -312,6 +318,7 @@ Vail:
 jobs ür thesis: bis 300
     torque only states
     position only states
+    TODO ab hier
     torque action states
     torque only states ablation
     torque only states ohne rotation
@@ -320,6 +327,11 @@ jobs ür thesis: bis 300
     
 quadruped_gail_unitreeA1_only_states_2023-03-27_17-15-58 torque only states, 5 seed, 300 epochs straight walking
 quadruped_vail_unitreeA1_only_states_2023-03-27_17-16-15
+
+quadruped_gail_unitreeA1_only_states_2023-03-27_17-18-31 position only states, 5 seed, 300 epochs straight walking
+quadruped_vail_unitreeA1_only_states_2023-03-27_17-18-40
+
+DRAN DENKEN ROTATION IN IMITTION WIEDER AN MACHEN
     
     
 """
