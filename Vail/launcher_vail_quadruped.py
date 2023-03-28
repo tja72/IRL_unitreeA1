@@ -48,16 +48,15 @@ if __name__ == '__main__':
     use_next_states = [1]
     horizons = [1000]
     gammas = [0.99]
-    uff = [False, True]
 
-    for lr, d, p_ent_coef, use_nt, last_pa, info_constraint, horizon, gamma, use_foot_forces in product(lrs, d_delays, plcy_ent_coefs,
+    for lr, d, p_ent_coef, use_nt, last_pa, info_constraint, horizon, gamma in product(lrs, d_delays, plcy_ent_coefs,
                                                                                        use_noisy_targets, lpa,
                                                                                        info_constraints, horizons,
-                                                                                       gammas, uff):
+                                                                                       gammas):
         lrc, lrD = lr
         launcher.add_experiment(train_D_n_th_epoch__=d,
                                 policy_entr_coef=p_ent_coef, last_policy_activation=last_pa, lrc=lrc, lrD__=lrD,
                                 use_noisy_targets__=use_nt, info_constraint__=info_constraint,
-                                horizon__=horizon, gamma__=gamma, use_foot_forces__=use_foot_forces, **default_params)
+                                horizon__=horizon, gamma__=gamma, **default_params)
 
     launcher.run(LOCAL, TEST)
