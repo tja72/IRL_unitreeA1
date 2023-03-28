@@ -28,7 +28,8 @@ from experiment_launcher import run_experiment
 
 def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_state=True, info_constraint=0.5,
                        train_D_n_th_epoch=3, lrc=1e-3, lrD=0.0003, sw=None, policy_entr_coef=0.0,
-                       use_noisy_targets=False, last_policy_activation="identity", use_next_states=True):
+                       use_noisy_targets=False, last_policy_activation="identity", use_next_states=True,
+                       use_random_init_orientation=False):
 
     mdp_info = deepcopy(mdp.info)
 
@@ -96,7 +97,8 @@ def _create_vail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
                       ent_coeff=policy_entr_coef,
                       use_noisy_targets=use_noisy_targets,
                       max_kl=5e-3,
-                      use_next_states=use_next_states)
+                      use_next_states=use_next_states,
+                      use_random_init_orientation=use_random_init_orientation)
 
     agent = VAIL_TRPO(mdp_info=mdp_info, policy_class=GaussianTorchPolicy, policy_params=policy_params, sw=sw,
                       discriminator_params=discriminator_params, critic_params=critic_params,
@@ -177,7 +179,8 @@ def experiment(states_data_path: str = None,
                                info_constraint=info_constraint, train_D_n_th_epoch=train_D_n_th_epoch, lrc=lrc,
                                lrD=lrD, sw=tb_writer, policy_entr_coef=policy_entr_coef,
                                use_noisy_targets=use_noisy_targets, use_next_states=use_next_states,
-                               last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
+                               last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask,
+                               use_random_init_orientation=setup_random_rot)
 
     #plot_data_callbacks = PlotDataset(mdp.info) # for error finding purposes
     core = Core(agent, mdp)#, callback_step=plot_data_callbacks)

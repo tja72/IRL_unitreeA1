@@ -33,7 +33,8 @@ from collections import defaultdict
 
 def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_state=True,
                        train_D_n_th_epoch=3, lrc=1e-3, lrD=0.0003, sw=None, policy_entr_coef=0.0,
-                       use_noisy_targets=False, last_policy_activation="identity", use_next_states=True):
+                       use_noisy_targets=False, last_policy_activation="identity", use_next_states=True,
+                       use_random_init_orientation=False):
 
     mdp_info = deepcopy(mdp.info)
 
@@ -92,7 +93,8 @@ def _create_gail_agent(mdp, expert_data, use_cuda, discrim_obs_mask, disc_only_s
                       ent_coeff=policy_entr_coef,
                       use_noisy_targets=use_noisy_targets,
                       max_kl=5e-3,
-                      use_next_states=use_next_states)
+                      use_next_states=use_next_states,
+                      use_random_init_orientation=use_random_init_orientation)
 
     agent = GAIL_TRPO(mdp_info=mdp_info, policy_class=GaussianTorchPolicy, policy_params=policy_params, sw=sw,
                       discriminator_params=discriminator_params, critic_params=critic_params,
@@ -172,7 +174,8 @@ def experiment(states_data_path: str = None,
                                train_D_n_th_epoch=train_D_n_th_epoch, lrc=lrc,
                                lrD=lrD, sw=tb_writer, policy_entr_coef=policy_entr_coef,
                                use_noisy_targets=use_noisy_targets, use_next_states=use_next_states,
-                               last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask)
+                               last_policy_activation=last_policy_activation, discrim_obs_mask=discrim_obs_mask,
+                               use_random_init_orientation=setup_random_rot)
 
     #plot_data_callbacks = PlotDataset(mdp.info) # for error finding purposes
     core = Core(agent, mdp)#, callback_step=plot_data_callbacks)
@@ -222,47 +225,3 @@ def catchtime() -> float:
 
 if __name__ == "__main__":
     run_experiment(experiment)
-
-
-    """
-    Questions:
-    
-    
-    
-
-    continue gail and not RL#
-    cluster
-    
-    trajectory stepping in one position -> bad for data?
-    
-    error in dataset: compute_episodes_length if lengths=[]
-    ignore x,y
-    imports smarter than now
-    what else in mushroom_irl state than observations
-    -> whats in state
-    
-    Did:
-    tuned values in xml
-    extend gail implementation to use actions
-    -> error
-    method to replay/restore learned agent
-
-
-
-------------------------------------------------------------------------------------------
-
-    why do I need absorbing/reward in the dataset
-    difference between using traj_param in mdp and using only prepare_expert data (in respect to absorbing/reward...)
-    Where Gail uses absorbing/reward
-    do I need a normalizer?
-    states and actions make sense to interpolate, absorbing and rewards don't
-    
-    continue fine tuning xml
-    
-    
-    
-    
-    Info traj:params used in core.learn draws random init point -> where it uses reward
-    """
-
-
