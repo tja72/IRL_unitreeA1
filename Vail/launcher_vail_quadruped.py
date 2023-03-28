@@ -10,7 +10,7 @@ if __name__ == '__main__':
     USE_CUDA = False
 
     JOBLIB_PARALLEL_JOBS = 1  # or os.cpu_count() to use all cores
-    N_SEEDS = 3
+    N_SEEDS = 5
 
     launcher = Launcher(exp_name='quadruped_vail_unitreeA1',
                         python_file='vail_quadruped',
@@ -25,12 +25,12 @@ if __name__ == '__main__':
                         use_timestamp=True,
                         )
 
-    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz',
-                          action_data_path='../data/actions_torque_2023_02_23_19_48_33.npz',
-                          n_epochs=500,
+    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33_straight.npz',
+                          action_data_path='../data/actions_torque_2023_02_23_19_48_33_straight.npz',
+                          n_epochs=300,
                           n_steps_per_epoch=100000,
                           n_epochs_save=50,
-                          n_eval_episodes=10,
+                          n_eval_episodes=25,
                           n_steps_per_fit=1000,
                           use_next_states=False,
                           use_cuda=USE_CUDA,
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]
     plcy_ent_coefs = [1e-3]
-    info_constraints = [0.1]
+    info_constraints = [1]
     use_noisy_targets = [0]
     lpa = ["identity"]
     use_next_states = [1]
