@@ -285,7 +285,8 @@ quadruped_gail_unitreeA1_only_states_2023-03-20_13-08-13 - only one seed
 quadruped_vail_unitreeA1_only_states_2023-03-20_13-51-54 - same mit 3 seeds
     not good; unstable-> seem like behavior is too complex
     wrong reward
-    
+
+- - - - - - - - --  -- - - - - - - -- - - - - - - - -  FALSCHES DATASET - - - - - - - - - - - - - - - - - - - - - - - - -
 quadruped_gail_unitreeA1_only_states_2023-03-22_20-30-41 - new learning rates (5e-05, 2.5e-5) and n_eval_episodes to 25
 quadruped_vail_unitreeA1_only_states_2023-03-22_20-42-39 - new learning rates (2.5e-05, 1.25e-5) and n_eval_episodes to 25
     both unstable
@@ -303,7 +304,7 @@ quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56 - with normal lrs
 quadruped_vail_unitreeA1_only_states_2023-03-26_22-58-19 - half learning rates and info constraint 0.1, 0.01
 
 quadruped_gail_unitreeA1_only_states_2023-03-28_19-37-59 - gail with best conditions but more seeds normal lr, torque etc
-
+- - - - - - - - --  -- - - - - - - -- - - - - - - - -  FALSCHES DATASET - - - - - - - - - - - - - - - - - - - - - - - - -
 Gail:
     letzte laufen mit richtigem reward hat sieht instabiler aus als der erste lauf bevor allen änderungen obwohl gleiche parameter
     auswerten noch
@@ -320,13 +321,12 @@ Vail:
 jobs ür thesis: bis 300
     torque only states
     position only states
-    TODO ab hier
     torque action states
     torque only states ablation
     torque only states ohne rotation
     torque only states rotation
     
-    
+- - - - - - - - --  -- - - - - - - -- - - - - - - - -  FALSCHES DATASET - - - - - - - - - - - - - - - - - - - - - - - - -
 quadruped_gail_unitreeA1_only_states_2023-03-27_17-15-58 torque only states, 5 seed, 300 epochs straight walking
 quadruped_vail_unitreeA1_only_states_2023-03-27_17-16-15
 
@@ -335,6 +335,7 @@ quadruped_vail_unitreeA1_only_states_2023-03-27_17-18-40
 
 quadruped_gail_unitreeA1_2023-03-28_19-24-48
 quadruped_vail_unitreeA1_2023-03-28_19-28-37 - torque action state 5 seed 300 epoch
+- - - - - - - - --  -- - - - - - - -- - - - - - - - -  FALSCHES DATASET - - - - - - - - - - - - - - - - - - - - - - - - -
 
 DRAN DENKEN ROTATION IN IMITTION WIEDER AN MACHEN
     
