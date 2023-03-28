@@ -340,5 +340,10 @@ quadruped_vail_unitreeA1_2023-03-28_19-28-37 - torque action state 5 seed 300 ep
 DRAN DENKEN ROTATION IN IMITTION WIEDER AN MACHEN
     
     
+Thesis Jobs:
+    quadruped_gail_unitreeA1_only_states_2023-03-29_01-47-29
+    quadruped_vail_unitreeA1_only_states_2023-03-29_01-48-00 - only states, torque, straight
+    
+    
 """
 
