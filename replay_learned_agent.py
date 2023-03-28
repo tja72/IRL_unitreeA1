@@ -331,6 +331,9 @@ quadruped_vail_unitreeA1_only_states_2023-03-27_17-16-15
 quadruped_gail_unitreeA1_only_states_2023-03-27_17-18-31 position only states, 5 seed, 300 epochs straight walking
 quadruped_vail_unitreeA1_only_states_2023-03-27_17-18-40
 
+quadruped_gail_unitreeA1_2023-03-28_19-24-48
+quadruped_vail_unitreeA1_2023-03-28_19-28-37 - torque action state 5 seed 300 epoch
+
 DRAN DENKEN ROTATION IN IMITTION WIEDER AN MACHEN
     
     
