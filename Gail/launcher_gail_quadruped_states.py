@@ -34,10 +34,10 @@ if __name__ == '__main__':
                           use_next_states=True,
                           discr_only_state=True,
                           use_cuda=USE_CUDA,
-                          use_torque_ctrl=False,
+                          use_torque_ctrl=True,
                           use_2d_ctrl=True,
                           tmp_dir_name=".",
-                          setup_random_rot=False) # ROTATION IN IMITATION WIEDER AN MACHEN, seeds, length, dataset
+                          setup_random_rot=True) # ROTATION IN IMITATION WIEDER AN MACHEN, seeds, length, dataset
 
     lrs = [(1e-4, 5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
     d_delays = [3] # [1, 3, 5, 10]
