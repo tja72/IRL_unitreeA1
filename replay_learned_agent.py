@@ -302,6 +302,8 @@ quadruped_gail_unitreeA1_only_states_2023-03-25_18-58-56 - with normal lrs
 
 quadruped_vail_unitreeA1_only_states_2023-03-26_22-58-19 - half learning rates and info constraint 0.1, 0.01
 
+quadruped_gail_unitreeA1_only_states_2023-03-28_19-37-59 - gail with best conditions but more seeds normal lr, torque etc
+
 Gail:
     letzte laufen mit richtigem reward hat sieht instabiler aus als der erste lauf bevor allen änderungen obwohl gleiche parameter
     auswerten noch
