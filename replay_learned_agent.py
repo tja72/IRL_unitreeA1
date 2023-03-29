@@ -349,5 +349,8 @@ Thesis Jobs:
     
     quadruped_gail_unitreeA1_2023-03-29_02-10-23
     quadruped_vail_unitreeA1_2023-03-29_02-10-35 - state action, torque, straight
+    
+    quadruped_gail_unitreeA1_only_states_2023-03-29_02-16-14
+    quadruped_vail_unitreeA1_only_states_2023-03-29_02-16-27 - only state, torque, 8 direction
 """
 

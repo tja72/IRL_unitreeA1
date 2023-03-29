@@ -38,7 +38,7 @@ if __name__ == '__main__':
                           use_torque_ctrl=True,
                           use_2d_ctrl=True,
                           tmp_dir_name=".",
-                          setup_random_rot=False) # setup_rotation, dataset, seeds, length, ctrl
+                          setup_random_rot=True) # setup_rotation, dataset, seeds, length, ctrl
 
     lrs = [(1e-4, 5e-5)]  # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
     d_delays = [3] # [1, 3, 5, 10]
@@ -48,7 +48,7 @@ if __name__ == '__main__':
     use_next_states = [1] # [0, 1]
     horizons = [1000]
     gammas = [0.99]
-    info_constraints = [1]# [1, 0.1, 0.01]
+    info_constraints = [1, 0.1]# [1, 0.1, 0.01]
 
     for lr, d, p_ent_coef, use_nt, last_pa, horizon, gamma, info_constraint in product(lrs, d_delays, plcy_ent_coefs,
                                                                       use_noisy_targets, lpa, horizons,
