@@ -35,7 +35,7 @@ if __name__ == '__main__':
                           use_next_states=True,
                           discr_only_state=True,
                           use_cuda=USE_CUDA,
-                          use_torque_ctrl=True,
+                          use_torque_ctrl=False,
                           use_2d_ctrl=True,
                           tmp_dir_name=".",
                           setup_random_rot=False) # setup_rotation, dataset, seeds, length, ctrl
