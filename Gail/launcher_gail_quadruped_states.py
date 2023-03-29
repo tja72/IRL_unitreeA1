@@ -24,7 +24,7 @@ if __name__ == '__main__':
                         use_timestamp=True,
                         )
 
-    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33_straight.npz', #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz',#
+    default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33.npz', #'/home/tim/Documents/locomotion_simulation/locomotion/examples/log/2023_02_23_19_22_49/states.npz',#
                           action_data_path=None,
                           n_epochs=300,
                           n_steps_per_epoch=100000,
@@ -34,7 +34,7 @@ if __name__ == '__main__':
                           use_next_states=True,
                           discr_only_state=True,
                           use_cuda=USE_CUDA,
-                          use_torque_ctrl=False,
+                          use_torque_ctrl=True,
                           use_2d_ctrl=True,
                           tmp_dir_name=".",
                           setup_random_rot=False) # setup_rotation, dataset, seeds, length, ctrl

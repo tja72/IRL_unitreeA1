@@ -322,7 +322,7 @@ jobs ür thesis: bis 300
     torque only states
     position only states
     torque action states
-    torque only states ablation
+    torque only states (ablation)
     torque only states ohne rotation
     torque only states rotation
     
@@ -347,5 +347,7 @@ Thesis Jobs:
     quadruped_gail_unitreeA1_only_states_2023-03-29_01-51-02
     quadruped_vail_unitreeA1_only_states_2023-03-29_02-01-57 - only states, position, straight
     
+    quadruped_gail_unitreeA1_2023-03-29_02-10-23
+    quadruped_vail_unitreeA1_2023-03-29_02-10-35 - state action, torque, straight
 """
 
