@@ -16,8 +16,8 @@ if __name__ == '__main__':
                         python_file='gail_quadruped',
                         n_exps=N_SEEDS,
                         n_cores=6,
-                        memory_per_core=500,
-                        days=4,
+                        memory_per_core=1000,
+                        days=3,
                         hours=0,
                         minutes=0,
                         seconds=0,
@@ -26,17 +26,18 @@ if __name__ == '__main__':
 
     default_params = dict(states_data_path='../data/states_2023_02_23_19_48_33_straight.npz',
                           action_data_path='../data/actions_torque_2023_02_23_19_48_33_straight.npz',
-                          n_epochs=500,
+                          n_epochs=300,
                           n_steps_per_epoch=100000,
                           n_epochs_save=50,
                           n_eval_episodes=25,
                           n_steps_per_fit=1000,
                           use_next_states=False,
-                          use_cuda=USE_CUDA,
                           discr_only_state=False,
+                          use_cuda=USE_CUDA,
                           use_torque_ctrl=True,
                           use_2d_ctrl=True,
-                          tmp_dir_name=".")
+                          tmp_dir_name=".",
+                          setup_random_rot=False) # setup_rotation, dataset, seeds, length, ctrl
 
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]

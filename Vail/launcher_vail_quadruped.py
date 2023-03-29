@@ -17,7 +17,7 @@ if __name__ == '__main__':
                         partition="amd2,amd",
                         n_exps=N_SEEDS,
                         n_cores=6,
-                        memory_per_core=500,
+                        memory_per_core=1000,
                         days=3,
                         hours=0,
                         minutes=0,
@@ -33,11 +33,12 @@ if __name__ == '__main__':
                           n_eval_episodes=25,
                           n_steps_per_fit=1000,
                           use_next_states=False,
-                          use_cuda=USE_CUDA,
                           discr_only_state=False,
+                          use_cuda=USE_CUDA,
                           use_torque_ctrl=True,
                           use_2d_ctrl=True,
-                          tmp_dir_name=".")
+                          tmp_dir_name=".",
+                          setup_random_rot=False)
 
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]

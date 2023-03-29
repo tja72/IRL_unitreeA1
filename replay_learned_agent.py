@@ -342,8 +342,10 @@ DRAN DENKEN ROTATION IN IMITTION WIEDER AN MACHEN
     
 Thesis Jobs:
     quadruped_gail_unitreeA1_only_states_2023-03-29_01-47-29
-    quadruped_vail_unitreeA1_only_states_2023-03-29_01-48-00 - only states, torque, straight
+    quadruped_vail_unitreeA1_only_states_2023-03-29_02-00-05 - only states, torque, straight
     
+    quadruped_gail_unitreeA1_only_states_2023-03-29_01-51-02
+    quadruped_vail_unitreeA1_only_states_2023-03-29_02-01-57 - only states, position, straight
     
 """
 
