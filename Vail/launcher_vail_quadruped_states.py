@@ -40,12 +40,12 @@ if __name__ == '__main__':
                           tmp_dir_name=".",
                           setup_random_rot=True) # setup_rotation, dataset, seeds, length, ctrl
 
-    lrs = [(1e-4, 5e-5)]  # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
+    lrs = [(1e-4, 1e-4)]  # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
     d_delays = [3] # [1, 3, 5, 10]
     plcy_ent_coefs = [1e-3]
     use_noisy_targets = [0]
     lpa = ["identity"]
-    use_next_states = [1] # [0, 1]
+    use_next_states = [1] # [0, 1] #einen job mit doppelte lrd und einen mit info 5
     horizons = [1000]
     gammas = [0.99]
     info_constraints = [1, 0.1]# [1, 0.1, 0.01]
