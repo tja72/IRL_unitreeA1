@@ -37,9 +37,9 @@ if __name__ == '__main__':
                           use_torque_ctrl=False,
                           use_2d_ctrl=True,
                           tmp_dir_name=".",
-                          setup_random_rot=False) # setup_rotation, dataset, seeds, length, ctrl
+                          setup_random_rot=False)
 
-    lrs = [(1e-4, 5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)] als log amplituden und freq von expert und agenten vgl plotten
+    lrs = [(1e-4, 5e-5)] # [(5e-4, 1e-4), (1e-4, 5e-5), (5e-5, 1e-5)]
     d_delays = [3] # [1, 3, 5, 10]
     plcy_ent_coefs = [1e-3] # [1e-3, 1e-2, 1e-3, 1e-4]
     use_noisy_targets = [0]

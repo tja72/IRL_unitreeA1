@@ -37,7 +37,7 @@ if __name__ == '__main__':
                           use_torque_ctrl=True,
                           use_2d_ctrl=True,
                           tmp_dir_name=".",
-                          setup_random_rot=False) # setup_rotation, dataset, seeds, length, ctrl
+                          setup_random_rot=False)
 
     lrs = [(1e-4, 5e-5)]
     d_delays = [3]
