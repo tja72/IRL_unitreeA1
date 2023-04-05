@@ -1,2 +1,2 @@
-# IRL_unitreeA1
-Bachelor thesis about inverse reinforcement learning on the unitree A1 with mujoco and mushroom-rl
+# Applied Inverse Reinforcement Learning from Observation on the Unitree A1 Robot
+These are the launcher files for my bachelor thesis. They run the IRL algorithms GAIL and VAIL on a MuJoCo model of the Unitree A1. The whole setting is implemented in the mushroomrl library. Replay agents replays the learned agent to evaluate the performance. In the last commit are functions to observe the feet height and to plot the reward of the replayed agents. That will only work if you also use the adapted mushroomrl library. For further details have a look at my thesis.
